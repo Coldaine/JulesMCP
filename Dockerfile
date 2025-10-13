@@ -2,14 +2,15 @@
 
 FROM node:20-alpine AS deps
 WORKDIR /app
-COPY package.json package-lock.json ./
+COPY package.json ./
 COPY backend/package.json backend/package.json
-RUN npm ci
+RUN npm install --workspaces --include-workspace-root
 
 FROM node:20-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/backend/node_modules ./backend/node_modules
+COPY package.json ./
 COPY backend ./backend
 COPY shared ./shared
 RUN npm run build
@@ -17,9 +18,11 @@ RUN npm run build
 FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
-COPY package.json package-lock.json ./
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/backend/node_modules ./backend/node_modules
+COPY package.json ./
 COPY backend/package.json backend/package.json
-RUN npm ci --omit=dev
+RUN npm prune --omit=dev
 COPY --from=builder /app/backend/dist ./backend/dist
 COPY --from=builder /app/backend/public ./backend/public
 COPY shared ./shared
