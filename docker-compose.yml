@@ -1,33 +1,32 @@
 version: '3.8'
 
 services:
-  jules-control-room:
+  backend:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: jules-control-room
-    ports:
-      - "3000:3000"
+    container_name: jules-control-room-backend
     environment:
       - NODE_ENV=production
-      - PORT=3000
+      - PORT=3001
       - LOG_LEVEL=info
-      - JWT_SECRET=${JWT_SECRET:-change-this-in-production}
+      - JULES_API_KEY=${JULES_API_KEY:-change-me}
+      - LOCAL_TOKEN=${LOCAL_TOKEN:-replace-in-prod}
+      - ALLOWLIST=${ALLOWLIST:-}
+      - CORS_ORIGIN=${CORS_ORIGIN:-}
+    ports:
+      - "3001:3001"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/healthz', (r) => { process.exit(r.statusCode === 200 ? 0 : 1); }).on('error', () => process.exit(1));"]
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3001/healthz"]
       interval: 30s
       timeout: 5s
       retries: 3
       start_period: 30s
-    networks:
-      - jules-network
     volumes:
-      - ./logs:/app/logs
-
-networks:
-  jules-network:
-    driver: bridge
+      - ./shared:/app/shared:ro
+      - ./backend/public:/app/backend/public:ro
+      - ./data:/app/data
 
 volumes:
-  logs:
+  data:

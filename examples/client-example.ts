@@ -1,69 +1,63 @@
-/**
- * Example usage of JulesClient
- * This demonstrates how to use the Jules HTTP client with retries and logging
- */
+import type { CreateSessionInput, JulesSession, SessionActivity } from '../shared/types.js';
 
-import { JulesClient } from '../src/julesClient.js';
+const BASE_URL = process.env.BASE_URL ?? 'http://localhost:3001';
+const TOKEN = process.env.LOCAL_TOKEN ?? 'local-dev-token';
 
-async function main() {
-  // Create a client instance
-  const client = new JulesClient('https://api.example.com', {
-    timeout: 5000,
-    retries: 3,
-    retryDelay: 1000,
-  });
-
-  console.log('=== Jules Client Examples ===\n');
-
-  // Example 1: GET request
-  console.log('1. Making a GET request...');
-  const getResponse = await client.get('/users');
-  console.log('GET Response:', getResponse.status);
-  console.log('Data:', getResponse.data);
-  console.log();
-
-  // Example 2: POST request
-  console.log('2. Making a POST request...');
-  const postResponse = await client.post('/users', {
-    name: 'John Doe',
-    email: 'john@example.com',
-  });
-  console.log('POST Response:', postResponse.status);
-  console.log('Data:', postResponse.data);
-  console.log();
-
-  // Example 3: PUT request
-  console.log('3. Making a PUT request...');
-  const putResponse = await client.put('/users/123', {
-    name: 'Jane Doe',
-  });
-  console.log('PUT Response:', putResponse.status);
-  console.log();
-
-  // Example 4: DELETE request
-  console.log('4. Making a DELETE request...');
-  const deleteResponse = await client.delete('/users/123');
-  console.log('DELETE Response:', deleteResponse.status);
-  console.log();
-
-  // Example 5: Custom headers
-  console.log('5. Making a request with custom headers...');
-  const customResponse = await client.get('/protected', {
+async function http<T>(path: string, init: RequestInit = {}): Promise<T> {
+  const response = await fetch(`${BASE_URL}${path}`, {
+    ...init,
     headers: {
-      'Authorization': 'Bearer token-here',
-      'X-Custom-Header': 'custom-value',
+      'Authorization': `Bearer ${TOKEN}`,
+      'Content-Type': 'application/json',
+      ...(init.headers ?? {}),
     },
   });
-  console.log('Custom Headers Response:', customResponse.status);
-  console.log();
-
-  // Example 6: Error handling
-  console.log('6. Handling errors...');
-  const errorResponse = await client.get('/non-existent-endpoint');
-  if (errorResponse.error) {
-    console.log('Error occurred:', errorResponse.error);
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`${response.status} ${response.statusText}: ${text}`);
   }
+  return (await response.json()) as T;
 }
 
-// Run examples
-main().catch(console.error);
+async function run() {
+  console.log('▶ Creating session');
+  const payload: CreateSessionInput = {
+    repo: 'example/repo',
+    summary: 'demo via client-example.ts',
+    participants: ['cli-user'],
+  };
+  const created = await http<JulesSession>('/api/sessions', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+  console.log('Created session:', created.id);
+
+  console.log('▶ Listing sessions');
+  const list = await http<{ sessions: JulesSession[] }>('/api/sessions');
+  console.log(`Total sessions: ${list.sessions.length}`);
+
+  console.log('▶ Approving session');
+  const approved = await http<JulesSession>(`/api/sessions/${created.id}/approve`, {
+    method: 'POST',
+    body: JSON.stringify({ state: 'approved' }),
+  });
+  console.log('Approval state:', approved.approval);
+
+  console.log('▶ Sending message');
+  await http(`/api/sessions/${created.id}/message`, {
+    method: 'POST',
+    body: JSON.stringify({ message: 'Client example ping' }),
+  });
+  console.log('Message sent');
+
+  console.log('▶ Fetching activities');
+  const activities = await http<{ activities: SessionActivity[] }>(
+    `/api/sessions/${created.id}/activities`,
+  );
+  console.log(`Activities returned: ${activities.activities.length}`);
+}
+
+run().catch((error) => {
+  console.error('Client example failed:', error.message);
+  process.exit(1);
+});

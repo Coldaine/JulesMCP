@@ -1,76 +1,51 @@
 #!/bin/bash
 
-# Example API calls for Jules Control Room
-# This script demonstrates how to interact with the API endpoints
+set -euo pipefail
 
-set -e
+if ! command -v jq >/dev/null 2>&1; then
+  echo "jq is required for this script" >&2
+  exit 1
+fi
 
-echo "=== Jules Control Room API Examples ==="
-echo ""
+BASE_URL=${BASE_URL:-http://localhost:3001}
+TOKEN=${LOCAL_TOKEN:-local-dev-token}
 
-# Configuration
-BASE_URL="http://localhost:3000"
-JWT_SECRET="your-secret-key-change-in-production"
+header() {
+  printf '\n=== %s ===\n' "$1"
+}
 
-# Generate a JWT token (requires Node.js)
-echo "1. Generating authentication token..."
-TOKEN=$(node -e "
-const jwt = require('jsonwebtoken');
-const token = jwt.sign({ userId: 'test-user', isAdmin: false }, '$JWT_SECRET', { expiresIn: '1h' });
-console.log(token);
-")
-echo "   Token: ${TOKEN:0:50}..."
-echo ""
-
-# Test health endpoints
-echo "2. Testing health endpoints..."
-echo "   /healthz:"
+header "Health checks"
 curl -s "$BASE_URL/healthz" | jq .
-echo "   /readyz:"
 curl -s "$BASE_URL/readyz" | jq .
-echo ""
 
-# Create a new session
-echo "3. Creating a new session..."
-RESPONSE=$(curl -s -X POST "$BASE_URL/api/sessions" \
+header "Create session"
+CREATE_RESPONSE=$(curl -sS -X POST "$BASE_URL/api/sessions" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"data": {"key": "initial-value", "count": 0}}')
-echo "$RESPONSE" | jq .
-SESSION_ID=$(echo "$RESPONSE" | jq -r .sessionId)
-echo "   Created session: $SESSION_ID"
-echo ""
+  -d '{"repo":"example/repo","summary":"demo run","participants":["alice"]}')
+SESSION_ID=$(echo "$CREATE_RESPONSE" | jq -r .id)
+echo "$CREATE_RESPONSE" | jq .
 
-# List all sessions
-echo "4. Listing all sessions..."
-curl -s "$BASE_URL/api/sessions" \
+header "List sessions"
+curl -sS "$BASE_URL/api/sessions" \
   -H "Authorization: Bearer $TOKEN" | jq .
-echo ""
 
-# Get specific session
-echo "5. Getting session details..."
-curl -s "$BASE_URL/api/sessions/$SESSION_ID" \
-  -H "Authorization: Bearer $TOKEN" | jq .
-echo ""
-
-# Update session
-echo "6. Updating session..."
-curl -s -X PUT "$BASE_URL/api/sessions/$SESSION_ID" \
+header "Approve session"
+APPROVE_RESPONSE=$(curl -sS -X POST "$BASE_URL/api/sessions/$SESSION_ID/approve" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"data": {"key": "updated-value", "count": 42}}' | jq .
-echo ""
+  -d '{"state":"approved"}')
+echo "$APPROVE_RESPONSE" | jq .
 
-# Delete session
-echo "7. Deleting session..."
-curl -s -X DELETE "$BASE_URL/api/sessions/$SESSION_ID" \
+header "Send message"
+curl -sS -X POST "$BASE_URL/api/sessions/$SESSION_ID/message" \
   -H "Authorization: Bearer $TOKEN" \
-  -w "Status: %{http_code}\n"
-echo ""
+  -H "Content-Type: application/json" \
+  -d '{"message":"Control room ping"}' | jq .
 
-# Try to access without authentication
-echo "8. Testing authentication (should fail)..."
-curl -s "$BASE_URL/api/sessions" | jq .
-echo ""
+header "Fetch activities"
+curl -sS "$BASE_URL/api/sessions/$SESSION_ID/activities" \
+  -H "Authorization: Bearer $TOKEN" | jq .
 
-echo "=== Examples completed ==="
+header "Auth failure demo"
+curl -sS "$BASE_URL/api/sessions" | jq .

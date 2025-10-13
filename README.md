@@ -1,174 +1,102 @@
-# Jules Control Room
+# Jules Control Room Backend
 
-Secure real-time backend for Jules Control Room with TypeScript, Express, and WebSocket support.
+Secure, single-origin backend for orchestrating Jules sessions with strict auth, resilient WebSockets, and observability baked in.
 
-## Features
+## Repository Layout
 
-- **Secure Authentication**: JWT-based authentication with token validation
-- **Rate Limiting**: Built-in rate limiting to prevent abuse
-- **WebSocket Support**: Real-time communication with heartbeat mechanism
-- **Session Management**: Complete CRUD operations for sessions
-- **Health Checks**: `/healthz` and `/readyz` endpoints for monitoring
-- **Structured Logging**: Pino-based logging with request tracking
-- **Robust HTTP Client**: `julesClient` with timeout, retries, and redacted logging
-- **Observability**: Request IDs, timing, and comprehensive logging
-- **Docker Support**: Production-ready Dockerfile and docker-compose
+```
+jules-control-room/
+  backend/
+    src/
+      server.ts
+      routes/
+      auth.ts
+      security.ts
+      julesClient.ts
+      ws.ts
+      logging.ts
+    public/
+  shared/
+    types.ts
+```
 
 ## Prerequisites
 
-- Node.js 20 or higher
-- npm or yarn
-- Docker (optional, for containerized deployment)
+- Node.js 20+
+- npm 9+
+- Optional: Docker & Docker Compose
 
-## Installation
+## Getting Started
 
 ```bash
-# Install dependencies
 npm install
+cp backend/.env.example backend/.env
+# edit backend/.env with real tokens before running in production
 
-# Copy environment variables
-cp .env.example .env
-
-# Edit .env and set your JWT_SECRET
-```
-
-## Development
-
-```bash
-# Run in development mode with hot reload
+# Start the API + WebSocket server with hot reload
 npm run dev
-
-# Build TypeScript
-npm run build
-
-# Run production build
-npm start
-
-# Lint code
-npm run lint
-
-# Type check
-npm run type-check
 ```
 
-## API Endpoints
+Core npm scripts are proxied through the root workspace:
 
-### Health Checks
+- `npm run build` – compile TypeScript to `backend/dist`
+- `npm run start` – run the compiled server
+- `npm run lint` – ESLint with Prettier formatting rules
+- `npm run typecheck` – strict TypeScript checking
+- `npm run test` – Vitest unit + integration suite
 
-- `GET /healthz` - Basic health check
-- `GET /readyz` - Readiness check
+## Environment Variables (`backend/.env`)
 
-### Session Management (Requires Authentication)
+| Variable | Purpose |
+| --- | --- |
+| `JULES_API_KEY` | Jules service key, injected into outbound API calls |
+| `LOCAL_TOKEN` | Bearer token required for both REST and WebSocket clients |
+| `PORT` | Listening port (defaults to `3001`) |
+| `ALLOWLIST` | Comma-separated CIDR prefixes for LAN exposure (empty = localhost only) |
+| `CORS_ORIGIN` | Explicit origins when serving a remote UI (unset keeps single-origin mode) |
+| `PERSIST` | Set to `1` to enable optional SQLite history (`sql.js`) |
+| `NOTIFY_WEBHOOK` | Optional HTTPS endpoint notified on session deltas |
 
-- `POST /api/sessions` - Create a new session
-- `GET /api/sessions` - List all sessions
-- `GET /api/sessions/:id` - Get a specific session
-- `PUT /api/sessions/:id` - Update a session
-- `DELETE /api/sessions/:id` - Delete a session
+**Never** expose the backend without a strong `LOCAL_TOKEN`, firewall rules, and an explicit `ALLOWLIST`.
 
-### Authentication
+## Security & Networking
 
-All `/api/*` endpoints require JWT authentication. Include the token in the Authorization header:
+- Unified origin: static assets can be served from `backend/public/` to avoid CORS.
+- REST auth: `Authorization: Bearer <LOCAL_TOKEN>`.
+- WebSocket auth: `Sec-WebSocket-Protocol: bearer.<LOCAL_TOKEN>`.
+- Rate limiting: 60 requests/minute per IP+path.
+- LAN mode: only prefixes in `ALLOWLIST` are accepted.
+- No secrets in logs: request bodies, headers, and env values are excluded.
+
+## Observability
+
+- `GET /healthz` – liveness probe.
+- `GET /readyz` – 1s Jules API probe.
+- Structured logs (Pino) with request IDs for every HTTP response.
+
+## Testing
 
 ```
-Authorization: Bearer <your-jwt-token>
+npm run test
 ```
 
-## WebSocket Connection
+The suite covers auth middleware, security guards, HTTP schema validation, Jules client retry/backoff logic, integration flows (create → approve → message → activities), and WebSocket heartbeats/delta broadcasts.
 
-Connect to WebSocket endpoint with authentication:
+## Docker
 
-```javascript
-const ws = new WebSocket('ws://localhost:3000/ws?token=<your-jwt-token>');
-
-ws.on('open', () => {
-  // Subscribe to session updates
-  ws.send(JSON.stringify({
-    type: 'subscribe',
-    sessionId: 'session-id-here'
-  }));
-});
-
-ws.on('message', (data) => {
-  const message = JSON.parse(data);
-  console.log('Received:', message);
-});
-```
-
-### WebSocket Message Types
-
-- `welcome` - Connection established
-- `subscribed` - Subscribed to session updates
-- `session-update` - Session data changed (diff broadcast)
-
-## Docker Deployment
+Build and run the containerised backend:
 
 ```bash
-# Build and run with Docker Compose
-docker-compose up -d
-
-# View logs
-docker-compose logs -f
-
-# Stop services
-docker-compose down
+docker compose build
+docker compose up -d
 ```
 
-## Jules Client Usage
+Environment variables are sourced from your shell. The image exposes `3001` and ships with a healthcheck hitting `/healthz`.
 
-The `julesClient` module provides a robust HTTP client with automatic retries and logging:
+If `NOTIFY_WEBHOOK` is set, each session delta is posted to that HTTPS endpoint (headers/body redacted of secrets by default).
 
-```typescript
-import { JulesClient } from './julesClient';
+Persistent session history (when `PERSIST=1`) is written under `/app/data/sessions.sqlite`. Mount the `data/` volume to keep history between restarts.
 
-const client = new JulesClient('https://api.example.com', {
-  timeout: 5000,
-  retries: 3,
-  retryDelay: 1000,
-});
+## Demo Flow
 
-// GET request
-const response = await client.get('/endpoint');
-
-// POST request
-const result = await client.post('/endpoint', { data: 'value' });
-
-// PUT request
-await client.put('/endpoint', { data: 'updated' });
-
-// DELETE request
-await client.delete('/endpoint');
-```
-
-## Configuration
-
-Environment variables:
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| PORT | Server port | 3000 |
-| NODE_ENV | Environment | development |
-| JWT_SECRET | JWT signing secret | (required) |
-| LOG_LEVEL | Logging level | info |
-
-## Security Features
-
-- JWT-based authentication
-- Rate limiting (100 requests per 15 minutes per IP)
-- Request ID tracking
-- Sensitive data redaction in logs
-- Non-root Docker user
-- Graceful shutdown handling
-
-## Architecture
-
-- **Express**: HTTP server framework
-- **ws**: WebSocket library
-- **Pino**: High-performance logging
-- **JWT**: Token-based authentication
-- **express-rate-limit**: Rate limiting middleware
-- **TypeScript**: Type-safe development
-
-## License
-
-MIT
+A scripted Vitest integration test (`routes.test.ts`) mocks the Jules API to create a session, approve it, send a message, and read back activities. The WebSocket test (`ws.test.ts`) verifies heartbeats and diff broadcasts.
