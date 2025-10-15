@@ -28,17 +28,18 @@ describe('doJson', () => {
   });
 
   it('throws JulesHttpError on timeout', async () => {
-    const clock = vi.useFakeTimers();
+    vi.useFakeTimers();
     const scope = nock(BASE)
       .get('/sessions')
       .delayConnection(2000)
       .reply(200, {});
 
     const promise = doJson('/sessions', { method: 'GET', timeoutMs: 500 });
-    await clock.runAllAsync();
-    await expect(promise).rejects.toHaveProperty('status', 408);
+    const expectation = expect(promise).rejects.toHaveProperty('status', 408);
+    await vi.runAllTimersAsync();
+    await expectation;
     scope.done();
-    clock.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('surfaces non-retryable errors', async () => {

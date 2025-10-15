@@ -2,6 +2,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
+import { fileURLToPath } from 'node:url';
 
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -15,7 +16,11 @@ import { ipAllow, rateLimit } from './security.js';
 import { doJson, JulesHttpError } from './julesClient.js';
 import { setupWebSockets } from './ws.js';
 
-const envPath = process.env.ENV_FILE ?? path.resolve(process.cwd(), 'backend', '.env');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const backendRoot = path.resolve(__dirname, '..');
+
+const envPath = process.env.ENV_FILE ?? path.join(backendRoot, '.env');
 if (fs.existsSync(envPath)) {
   dotenv.config({ path: envPath });
 } else {
@@ -40,7 +45,7 @@ if (process.env.CORS_ORIGIN) {
   );
 }
 
-const publicDir = path.resolve(process.cwd(), 'backend', 'public');
+const publicDir = path.join(backendRoot, 'public');
 if (fs.existsSync(publicDir)) {
   app.use(express.static(publicDir, { setHeaders: (res) => res.setHeader('Cache-Control', 'no-store') }));
 }

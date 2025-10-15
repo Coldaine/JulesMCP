@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 import initSqlJs, { type Database } from 'sql.js';
 
-import type { JulesSession } from '@shared/types';
+import type { JulesSession, SessionDelta } from '@shared/types';
 import { logError, logEvent } from './logging.js';
 
 export const persistenceEnabled = process.env.PERSIST === '1';
@@ -53,26 +53,36 @@ async function init(): Promise<Database> {
   }
 }
 
-export async function persistSessions(sessions: JulesSession[]): Promise<void> {
-  if (!persistenceEnabled || !sessions.length) {
+export async function persistSessions(deltas: SessionDelta[]): Promise<void> {
+  if (!persistenceEnabled || !deltas.length) {
     return;
   }
   const db = await getDb();
-  const stmt = db.prepare(
-    'INSERT OR REPLACE INTO sessions (id, data, updated_at) VALUES (?, ?, ?)',
-  );
+  const upsert = db.prepare('INSERT OR REPLACE INTO sessions (id, data, updated_at) VALUES (?, ?, ?)');
+  const remove = db.prepare('DELETE FROM sessions WHERE id = ?');
   try {
     db.run('BEGIN TRANSACTION');
-    for (const session of sessions) {
-      stmt.run([session.id, JSON.stringify(session), session.updatedAt]);
+    let mutated = false;
+    for (const delta of deltas) {
+      if (delta.current) {
+        upsert.run([delta.current.id, JSON.stringify(delta.current), delta.current.updatedAt]);
+        mutated = true;
+      }
+      if (!delta.current && delta.change === 'deleted') {
+        remove.run([delta.id]);
+        mutated = true;
+      }
     }
     db.run('COMMIT');
-    await flush(db);
+    if (mutated) {
+      await flush(db);
+    }
   } catch (error) {
     db.run('ROLLBACK');
     logError({ msg: 'persistence_write_failed', err: error as Error });
   } finally {
-    stmt.free();
+    upsert.free();
+    remove.free();
   }
 }
 
