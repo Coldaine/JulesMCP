@@ -1,28 +1,34 @@
-import { randomUUID } from 'crypto';
-import pino from 'pino';
-import type { RequestHandler } from 'express';
+import { randomUUID } from 'node:crypto';
+
+import type { Request, RequestHandler } from 'express';
+import createPino, { stdTimeFunctions } from 'pino';
 
 const level = process.env.LOG_LEVEL ?? (process.env.NODE_ENV === 'production' ? 'info' : 'debug');
 
-export const logger = pino({
+export const logger = createPino({
   level,
   base: undefined,
-  timestamp: pino.stdTimeFunctions.isoTime,
+  timestamp: stdTimeFunctions.isoTime,
   redact: {
     paths: ['req.headers.authorization', 'res.headers', 'headers.authorization'],
     remove: true,
   },
 });
 
+type RequestWithId = Request & { id?: string };
+
 export const withRequestId: RequestHandler = (req, res, next) => {
-  (req as any).id = req.headers['x-request-id'] ?? randomUUID();
+  const request = req as RequestWithId;
+  const header = req.headers['x-request-id'];
+  const requestId = Array.isArray(header) ? header[0] : header;
+  request.id = requestId ?? randomUUID();
   const start = Date.now();
   res.on('finish', () => {
     logger.info({
-      id: (req as any).id,
+      id: request.id,
       at: 'req',
-      method: req.method,
-      path: req.path,
+      method: request.method,
+      path: request.path,
       status: res.statusCode,
       ms: Date.now() - start,
     });
@@ -40,10 +46,11 @@ export function logError(event: Record<string, unknown> & { err: Error }): void 
 }
 
 function filterValue<T>(value: T): T {
-  if (value && typeof value === 'object') {
-    for (const key of Object.keys(value as Record<string, unknown>)) {
+  if (value && typeof value === 'object' && !Array.isArray(value)) {
+    const record = value as Record<string, unknown>;
+    for (const key of Object.keys(record)) {
       if (key.toLowerCase().includes('token') || key.toLowerCase().includes('secret')) {
-        (value as Record<string, unknown>)[key] = '[redacted]';
+        record[key] = '[redacted]';
       }
     }
   }
@@ -51,7 +58,7 @@ function filterValue<T>(value: T): T {
 }
 
 function truncate(value: string, max = 300): string {
-  return value.length > max ? `${value.slice(0, max)}…` : value;
+  return value.length > max ? `${value.slice(0, max)}...` : value;
 }
 
 export function attachRequestId(req: { id?: string }): string {

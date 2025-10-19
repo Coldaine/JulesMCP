@@ -34,10 +34,17 @@ describe('rateLimit', () => {
   const app = express();
   app.get('/limited', rateLimit(2), (_req, res) => res.json({ ok: true }));
 
-  it('allows within limits', async () => {
-    await request(app).get('/limited');
-    await request(app).get('/limited');
-    const res = await request(app).get('/limited');
-    expect(res.status).toBe(429);
+  it('allows requests within limit then blocks excess', async () => {
+    const res1 = await request(app).get('/limited');
+    expect(res1.status).toBe(200);
+    expect(res1.body).toEqual({ ok: true });
+
+    const res2 = await request(app).get('/limited');
+    expect(res2.status).toBe(200);
+    expect(res2.body).toEqual({ ok: true });
+
+    const res3 = await request(app).get('/limited');
+    expect(res3.status).toBe(429);
+    expect(res3.body).toHaveProperty('error', 'rate_limited');
   });
 });

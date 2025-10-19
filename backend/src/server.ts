@@ -1,32 +1,32 @@
-import http from 'node:http';
 import fs from 'node:fs';
+import http from 'node:http';
 import path from 'node:path';
 import process from 'node:process';
 
 import cors from 'cors';
-import dotenv from 'dotenv';
-import express from 'express';
+import { config as loadEnv } from 'dotenv';
+import express, { json as expressJson, static as expressStatic } from 'express';
 import helmet from 'helmet';
 
 import { authHttp } from './auth.js';
-import { withRequestId, logError, logEvent, logger } from './logging.js';
+import { doJson, JulesHttpError } from './julesClient.js';
+import { logError, logEvent, logger, withRequestId } from './logging.js';
 import sessionsRouter from './routes/sessions.js';
 import { ipAllow, rateLimit } from './security.js';
-import { doJson, JulesHttpError } from './julesClient.js';
 import { setupWebSockets } from './ws.js';
 
 const envPath = process.env.ENV_FILE ?? path.resolve(process.cwd(), 'backend', '.env');
 if (fs.existsSync(envPath)) {
-  dotenv.config({ path: envPath });
+  loadEnv({ path: envPath });
 } else {
-  dotenv.config();
+  loadEnv();
 }
 
 const app = express();
 
 app.disable('x-powered-by');
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'same-origin' } }));
-app.use(express.json({ limit: '1mb' }));
+app.use(expressJson({ limit: '1mb' }));
 app.use(withRequestId);
 
 if (process.env.CORS_ORIGIN) {
@@ -42,7 +42,7 @@ if (process.env.CORS_ORIGIN) {
 
 const publicDir = path.resolve(process.cwd(), 'backend', 'public');
 if (fs.existsSync(publicDir)) {
-  app.use(express.static(publicDir, { setHeaders: (res) => res.setHeader('Cache-Control', 'no-store') }));
+  app.use(expressStatic(publicDir, { setHeaders: (res) => res.setHeader('Cache-Control', 'no-store') }));
 }
 
 app.use('/api', ipAllow, rateLimit(60), authHttp, sessionsRouter);
@@ -64,9 +64,10 @@ app.get('/readyz', async (_req, res) => {
   }
 });
 
-app.use((err: Error, req: express.Request, res: express.Response, _next: express.NextFunction) => {
+app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
   logError({ msg: 'unhandled_error', route: req.path, err });
   if (res.headersSent) {
+    next(err);
     return;
   }
   res.status(500).json({ error: 'internal_error' });

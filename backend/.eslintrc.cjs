@@ -1,8 +1,13 @@
+const path = require('node:path');
+
+const tsResolver = path.resolve(__dirname, 'ts-resolver.cjs');
+
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: ['./tsconfig.json']
+    project: ['./tsconfig.json'],
+    tsconfigRootDir: __dirname
   },
   env: {
     node: true,
@@ -16,6 +21,18 @@ module.exports = {
     'plugin:import/typescript',
     'prettier'
   ],
+  settings: {
+    'import/resolver': {
+      [tsResolver]: {
+        project: [path.resolve(__dirname, 'tsconfig.json')],
+        alwaysTryTypes: true
+      },
+      node: {
+        extensions: ['.js', '.ts'],
+        moduleDirectory: ['node_modules', 'src']
+      }
+    }
+  },
   rules: {
     'import/order': [
       'error',
