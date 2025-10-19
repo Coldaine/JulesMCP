@@ -28,14 +28,14 @@ describe('authWs', () => {
   it('rejects invalid protocol token', () => {
     const result = authWs({
       headers: { 'sec-websocket-protocol': 'bearer.invalid' },
-    } as any);
+    });
     expect(result).toBe(false);
   });
 
   it('accepts matching token', () => {
     const result = authWs({
       headers: { 'sec-websocket-protocol': `bearer.${process.env.LOCAL_TOKEN}` },
-    } as any);
+    });
     expect(result).toBe(true);
   });
 });

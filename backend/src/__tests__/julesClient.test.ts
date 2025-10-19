@@ -1,4 +1,4 @@
-import nock from 'nock';
+import nock, { cleanAll } from 'nock';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { JulesHttpError, doJson } from '../julesClient.js';
@@ -8,11 +8,11 @@ const BASE = 'https://api.jules.test';
 describe('doJson', () => {
   beforeEach(() => {
     process.env.JULES_API_BASE = BASE;
-    nock.cleanAll();
+    cleanAll();
   });
 
   afterEach(() => {
-    nock.cleanAll();
+    cleanAll();
   });
 
   it('retries on transient failure', async () => {
@@ -28,17 +28,21 @@ describe('doJson', () => {
   });
 
   it('throws JulesHttpError on timeout', async () => {
-    const clock = vi.useFakeTimers();
-    const scope = nock(BASE)
-      .get('/sessions')
-      .delayConnection(2000)
-      .reply(200, {});
+    vi.useFakeTimers();
+    try {
+      const scope = nock(BASE)
+        .get('/sessions')
+        .delayConnection(2000)
+        .reply(200, {});
 
-    const promise = doJson('/sessions', { method: 'GET', timeoutMs: 500 });
-    await clock.runAllAsync();
-    await expect(promise).rejects.toHaveProperty('status', 408);
-    scope.done();
-    clock.useRealTimers();
+      const promise = doJson('/sessions', { method: 'GET', timeoutMs: 500 });
+      const expectation = expect(promise).rejects.toHaveProperty('status', 408);
+      await vi.advanceTimersByTimeAsync(500);
+      await expectation;
+      scope.done();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('surfaces non-retryable errors', async () => {

@@ -16,7 +16,7 @@ import { logError } from '../logging.js';
 const router = Router();
 
 const planStatusSchema = z.enum(['pending', 'in_progress', 'succeeded', 'failed']);
-const approvalStateSchema = z.enum(['pending', 'approved', 'rejected']);
+const approvalStateSchema = z.enum(['approved', 'rejected']);
 
 const createSessionSchema = z.object({
   repo: z.string().min(1),

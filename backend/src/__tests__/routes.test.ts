@@ -1,4 +1,5 @@
-import nock from 'nock';
+import type { Express } from 'express';
+import nock, { cleanAll } from 'nock';
 import request from 'supertest';
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
@@ -6,7 +7,7 @@ const BASE = 'https://api.jules.test';
 const TOKEN = 'test-token';
 
 describe('sessions routes', () => {
-  let app: import('express').Express;
+  let app: Express;
 
   beforeAll(async () => {
     process.env.JULES_API_BASE = BASE;
@@ -17,7 +18,7 @@ describe('sessions routes', () => {
   });
 
   beforeEach(() => {
-    nock.cleanAll();
+    cleanAll();
   });
 
   it('supports create, approve, message and activities', async () => {
