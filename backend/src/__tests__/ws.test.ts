@@ -99,4 +99,16 @@ describe('websocket updates', () => {
 
     ws.terminate();
   });
+
+  it('rejects websocket connections without bearer credentials', async () => {
+    const address = server.address() as AddressInfo;
+    const url = `ws://127.0.0.1:${address.port}/ws`;
+    const ws = new WebSocket(url);
+
+    const error = await new Promise<Error>((resolve) => {
+      ws.once('error', (err) => resolve(err as Error));
+    });
+
+    expect(error.message).toContain('401');
+  });
 });
