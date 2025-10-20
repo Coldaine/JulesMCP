@@ -24,6 +24,7 @@ Complete documentation for the Jules Control Room Backend - a **personal, single
 
 ### Implementation Details
 
+- **[MCP Framework Analysis](./MCP_FRAMEWORK_ANALYSIS.md)** - Strategic framework selection summary
 - **[Implementation Notes](./implementation-notes.md)** - Backend highlights and extensibility
 - **[Claude Instructions](./claude-instructions.md)** - AI assistant guidance for this codebase
 
@@ -65,6 +66,7 @@ docs/
 ├── linting-quick-reference.md      # Quick lint commands
 ├── linting-detailed.md             # Detailed lint setup
 ├── implementation-notes.md         # Backend implementation
+├── MCP_FRAMEWORK_ANALYSIS.md       # Framework selection summary
 ├── claude-instructions.md          # AI assistant guide
 ├── ui-overview.md                  # UI documentation
 ├── plan/
