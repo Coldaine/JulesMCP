@@ -7,7 +7,7 @@ This note aligns the current frontend prototype with the existing backend and an
 - Day 1: No backend rewrite is required. Keep the existing Express proxy as-is, wire the UI to it, and defer experimental/MCP features.
 - Day 2+: Add an MCP sidecar or incremental adapter if/when we need tool/resource semantics for agent integrations. Prefer Official SDK (TS/Python) or FastMCP; no full rewrite needed.
 - UI surface stays intact: retain every existing control/component even when backend support is pending, and label those gaps as aspirational rather than removing UI affordances.
-- Scope: All implementation work lands in this JulesMCP repository; external examples (e.g., archived prototypes) serve as reference only.
+- Scope: All implementation work lands in this JulesMCP repository; the checked-in `Julescontrolroomui/` prototype is our staging ground, and we will lift whatever code we need from it into the live app rather than relying on an external repo.
 
 ## Current Backend: What we have
 
