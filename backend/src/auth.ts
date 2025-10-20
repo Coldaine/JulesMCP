@@ -1,4 +1,4 @@
-import type { IncomingHttpHeaders, IncomingMessage } from 'node:http';
+import type { IncomingMessage } from 'node:http';
 
 import type { RequestHandler } from 'express';
 
@@ -11,9 +11,7 @@ export const authHttp: RequestHandler = (req, res, next) => {
   return res.status(401).json({ error: 'unauthorized' });
 };
 
-type WsRequest = Pick<IncomingMessage, 'headers'> & { headers: IncomingHttpHeaders };
-
-export function authWs(req: WsRequest): boolean {
+export function authWs(req: Pick<IncomingMessage, 'headers'>): boolean {
   const protocols = (req.headers['sec-websocket-protocol'] ?? '')
     .toString()
     .split(',')

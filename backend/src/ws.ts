@@ -24,7 +24,7 @@ export function setupWebSockets(server: Server) {
     noServer: true,
     clientTracking: true,
     handleProtocols(protocols, request) {
-      const selected = protocolSelections.get(request as IncomingMessage);
+      const selected = protocolSelections.get(request);
       if (selected) {
         return selected;
       }
@@ -92,7 +92,7 @@ export function setupWebSockets(server: Server) {
       return;
     }
 
-    if (!authWs(request as any)) {
+    if (!authWs(request)) {
       socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
       socket.destroy();
       return;

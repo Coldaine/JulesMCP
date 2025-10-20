@@ -35,9 +35,9 @@ module.exports = {
   },
   rules: {
     'import/order': [
-      'error',
+      'warn',
       {
-        'newlines-between': 'always',
+        'newlines-between': 'ignore',
         alphabetize: { order: 'asc', caseInsensitive: true }
       }
     ],
@@ -48,6 +48,15 @@ module.exports = {
         checksVoidReturn: { arguments: false }
       }
     ],
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_'
+      }
+    ],
+    '@typescript-eslint/no-explicit-any': 'warn',
     'no-console': 'off'
   }
 };

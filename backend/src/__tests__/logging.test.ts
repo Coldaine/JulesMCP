@@ -1,6 +1,6 @@
 import { EventEmitter } from 'node:events';
 
-import type { Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { logError, logEvent, logger, withRequestId } from '../logging.js';
@@ -30,13 +30,22 @@ describe('logging helpers', () => {
     logError({ msg: 'failure', secretKey: 'top', err });
 
     expect(errorSpy).toHaveBeenCalledTimes(1);
-    const payload = errorSpy.mock.calls[0][0];
+    const payload = errorSpy.mock.calls[0]?.[0];
+    expect(isRecord(payload) && isRecord(payload.err)).toBe(true);
+    if (!isRecord(payload) || !isRecord(payload.err)) {
+      throw new Error('expected structured error payload');
+    }
     expect(payload).toMatchObject({
       msg: 'failure',
       secretKey: '[redacted]',
     });
-    expect(payload.err.message).toHaveLength(303);
-    expect(payload.err.message?.endsWith('...')).toBe(true);
+    const message = payload.err.message;
+    expect(typeof message).toBe('string');
+    if (typeof message !== 'string') {
+      throw new Error('expected string error message');
+    }
+    expect(message).toHaveLength(303);
+    expect(message.endsWith('...')).toBe(true);
     expect(payload.err.stack).toBe(err.stack);
   });
 
@@ -49,15 +58,20 @@ describe('logging helpers', () => {
     } as unknown as Request & { id?: string };
     const res = new EventEmitter() as unknown as Response & { statusCode: number };
     res.statusCode = 204;
-    const next = vi.fn();
+    const next = vi.fn<Parameters<NextFunction>, void>();
+    const nextHandler: NextFunction = (...args) => next(...args);
 
-    withRequestId(req, res, next);
+    withRequestId(req, res, nextHandler);
     expect(req.id).toBe('abc-123');
     expect(next).toHaveBeenCalled();
 
     res.emit('finish');
     expect(infoSpy).toHaveBeenCalled();
     const logEntry = infoSpy.mock.calls.at(-1)?.[0];
+    expect(isRecord(logEntry)).toBe(true);
+    if (!isRecord(logEntry)) {
+      throw new Error('expected structured log entry');
+    }
     expect(logEntry).toMatchObject({
       id: 'abc-123',
       method: 'GET',
@@ -76,13 +90,28 @@ describe('logging helpers', () => {
     const res = new EventEmitter() as unknown as Response & { statusCode: number };
     res.statusCode = 201;
 
-    withRequestId(req, res, vi.fn());
+    const next = vi.fn<Parameters<NextFunction>, void>();
+    const nextHandler: NextFunction = (...args) => next(...args);
+
+    withRequestId(req, res, nextHandler);
     expect(req.id).toBeDefined();
 
     res.emit('finish');
     const logEntry = infoSpy.mock.calls.at(-1)?.[0];
-    expect(logEntry?.id).toBe(req.id);
-    expect(typeof logEntry?.id).toBe('string');
+    expect(isRecord(logEntry)).toBe(true);
+    if (!isRecord(logEntry)) {
+      throw new Error('expected structured log entry');
+    }
+    const identifier = logEntry.id;
+    expect(typeof identifier).toBe('string');
+    if (typeof identifier !== 'string') {
+      throw new Error('expected string identifier');
+    }
+    expect(identifier).toBe(req.id);
     expect(logEntry).toMatchObject({ method: 'POST', path: '/sessions', status: 201 });
   });
 });
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
+}

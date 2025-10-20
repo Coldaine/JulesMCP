@@ -11,6 +11,8 @@
     "build": "npm --workspace backend run build",
     "start": "npm --workspace backend run start",
     "lint": "npm --workspace backend run lint",
+    "lint:fix": "npm --workspace backend run lint:fix",
+    "lint:ci": "npm --workspace backend run lint:ci",
     "typecheck": "npm --workspace backend run typecheck",
     "test": "npm --workspace backend run test"
   }
