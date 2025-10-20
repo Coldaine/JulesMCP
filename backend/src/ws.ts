@@ -1,14 +1,14 @@
-import type { IncomingMessage } from 'node:http';
-import { WebSocketServer, WebSocket } from 'ws';
-import type { Server } from 'node:http';
+import type { IncomingMessage, Server } from 'node:http';
 
 import type { JulesSession, SessionDelta } from '@shared/types';
+import { WebSocket, WebSocketServer } from 'ws';
+
 import { authWs } from './auth.js';
 import { listSessions } from './julesClient.js';
 import { logError, logEvent } from './logging.js';
+import { notifyDelta } from './notifier.js';
 import { loadSessions, persistSessions, persistenceEnabled } from './persistence.js';
 import { enforceRateLimit, isIpAllowed, sanitizeIp } from './security.js';
-import { notifyDelta } from './notifier.js';
 
 interface JulesWebSocket extends WebSocket {
   isAlive?: boolean;
@@ -19,7 +19,23 @@ const HEARTBEAT_INTERVAL = 30_000;
 const POLL_INTERVAL = 5_000;
 
 export function setupWebSockets(server: Server) {
-  const wss = new WebSocketServer({ noServer: true, clientTracking: true });
+  const protocolSelections = new WeakMap<IncomingMessage, string>();
+  const wss = new WebSocketServer({
+    noServer: true,
+    clientTracking: true,
+    handleProtocols(protocols, request) {
+      const selected = protocolSelections.get(request as IncomingMessage);
+      if (selected) {
+        return selected;
+      }
+      for (const value of protocols) {
+        if (value.toLowerCase().startsWith('bearer.')) {
+          return value;
+        }
+      }
+      return false;
+    },
+  });
   const clients = new Set<JulesWebSocket>();
   let cache = new Map<string, JulesSession>();
   if (persistenceEnabled) {
@@ -88,10 +104,11 @@ export function setupWebSockets(server: Server) {
       socket.destroy();
       return;
     }
-    (request as IncomingMessage & { acceptedProtocol?: string }).acceptedProtocol = selected;
+    protocolSelections.set(request, selected);
 
     wss.handleUpgrade(request, socket, head, (ws) => {
       wss.emit('connection', ws, request);
+      protocolSelections.delete(request);
     });
   });
 

@@ -1,12 +1,16 @@
-import nock from 'nock';
+import type { Express } from 'express';
+import nock, { cleanAll } from 'nock';
 import request from 'supertest';
-import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import * as julesClient from '../julesClient.js';
+import { JulesHttpError } from '../julesClient.js';
 
 const BASE = 'https://api.jules.test';
 const TOKEN = 'test-token';
 
 describe('sessions routes', () => {
-  let app: import('express').Express;
+  let app: Express;
 
   beforeAll(async () => {
     process.env.JULES_API_BASE = BASE;
@@ -17,7 +21,11 @@ describe('sessions routes', () => {
   });
 
   beforeEach(() => {
-    nock.cleanAll();
+    cleanAll();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it('supports create, approve, message and activities', async () => {
@@ -89,5 +97,60 @@ describe('sessions routes', () => {
       .set('Authorization', `Bearer ${TOKEN}`)
       .expect(200);
     expect(activities.body.activities).toHaveLength(1);
+  });
+
+  it('returns validation errors from zod schemas', async () => {
+    const response = await request(app)
+      .post('/api/sessions')
+      .set('Authorization', `Bearer ${TOKEN}`)
+      .send({ repo: '' })
+      .expect(400);
+
+    expect(response.body.error).toBe('invalid_request');
+    expect(response.body).toHaveProperty('details');
+  });
+
+  it('maps Jules timeouts to 408 responses', async () => {
+    vi.spyOn(julesClient, 'listSessions').mockRejectedValue(new JulesHttpError('timeout', 408, ''));
+
+    const response = await request(app)
+      .get('/api/sessions')
+      .set('Authorization', `Bearer ${TOKEN}`)
+      .expect(408);
+
+    expect(response.body).toEqual({ error: 'jules_timeout' });
+  });
+
+  it('maps Jules rate limits to 429 responses', async () => {
+    vi.spyOn(julesClient, 'listSessions').mockRejectedValue(new JulesHttpError('rate', 429, ''));
+
+    const response = await request(app)
+      .get('/api/sessions')
+      .set('Authorization', `Bearer ${TOKEN}`)
+      .expect(429);
+
+    expect(response.body).toEqual({ error: 'jules_rate_limited' });
+  });
+
+  it('maps Jules server failures to 502 responses', async () => {
+    vi.spyOn(julesClient, 'getSession').mockRejectedValue(new JulesHttpError('boom', 503, 'server_down'));
+
+    const response = await request(app)
+      .get('/api/sessions/sess-1')
+      .set('Authorization', `Bearer ${TOKEN}`)
+      .expect(502);
+
+    expect(response.body).toEqual({ error: 'jules_unavailable', retry: true });
+  });
+
+  it('passes through other Jules errors with detail payload', async () => {
+    vi.spyOn(julesClient, 'getSession').mockRejectedValue(new JulesHttpError('missing', 404, 'not_found'));
+
+    const response = await request(app)
+      .get('/api/sessions/sess-unknown')
+      .set('Authorization', `Bearer ${TOKEN}`)
+      .expect(404);
+
+    expect(response.body).toEqual({ error: 'jules_error', detail: 'not_found' });
   });
 });

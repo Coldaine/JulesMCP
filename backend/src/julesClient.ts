@@ -1,10 +1,6 @@
+import type { CreateSessionInput, JulesSession, SessionActivity } from '@shared/types';
 import fetch, { Headers, type RequestInit } from 'node-fetch';
 
-import type {
-  CreateSessionInput,
-  JulesSession,
-  SessionActivity,
-} from '@shared/types';
 import { logError, logEvent } from './logging.js';
 
 const USER_AGENT = 'jules-control-room/1.0';

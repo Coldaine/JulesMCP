@@ -1,9 +1,10 @@
-import { AddressInfo } from 'node:net';
-
-import WebSocket from 'ws';
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-
+import type { Server } from 'node:http';
+import type { AddressInfo } from 'node:net';
+import type { SessionDelta } from '@shared/types';
+import { afterAll, beforeAll, describe, expect, it, vi, beforeEach } from 'vitest';
+import { WebSocket } from 'ws';
 import { enforceRateLimit, resetRateLimits, sanitizeIp } from '../security.js';
+import type * as JulesClient from '../julesClient.js';
 
 const TOKEN = 'test-token';
 
@@ -18,7 +19,7 @@ const sessionA = {
 };
 
 vi.mock('../julesClient.js', async () => {
-  const actual = await vi.importActual<typeof import('../julesClient.js')>('../julesClient.js');
+  const actual = await vi.importActual<typeof JulesClient>('../julesClient.js');
   let call = 0;
   return {
     ...actual,
@@ -40,8 +41,13 @@ vi.mock('../julesClient.js', async () => {
   };
 });
 
+interface SessionUpdateMessage {
+  type: 'session_update';
+  delta: SessionDelta[];
+}
+
 describe('websocket updates', () => {
-  let server: import('http').Server;
+  let server: Server;
   let shutdown: () => void;
 
   beforeAll(async () => {
@@ -70,30 +76,30 @@ describe('websocket updates', () => {
     const url = `ws://127.0.0.1:${address.port}/ws`;
     const ws = new WebSocket(url, [`bearer.${TOKEN}`]);
 
-    const messagePromise = new Promise((resolve) => {
-      ws.once('message', (data) => resolve(JSON.parse(data.toString())));
+    const messagePromise = new Promise<SessionUpdateMessage>((resolve) => {
+      ws.once('message', (data) => resolve(JSON.parse(data.toString()) as SessionUpdateMessage));
     });
 
-    const pingPromise = new Promise((resolve) => {
+    const pingPromise = new Promise<boolean>((resolve) => {
       ws.once('ping', () => resolve(true));
     });
 
     await new Promise((resolve) => ws.once('open', resolve));
 
     await vi.advanceTimersByTimeAsync(5_000);
-    const message = (await messagePromise) as any;
+    const message = await messagePromise;
     expect(message.type).toBe('session_update');
     expect(message.delta[0].change).toBe('created');
 
-    const secondMessagePromise = new Promise<any>((resolve) => {
-      ws.once('message', (data) => resolve(JSON.parse(data.toString())));
+    const secondMessagePromise = new Promise<SessionUpdateMessage>((resolve) => {
+      ws.once('message', (data) => resolve(JSON.parse(data.toString()) as SessionUpdateMessage));
     });
     await vi.advanceTimersByTimeAsync(5_000);
     const secondMessage = await secondMessagePromise;
     expect(secondMessage.delta[0].change).toBe('updated');
 
     await vi.advanceTimersByTimeAsync(30_000);
-    await expect(pingPromise).resolves.toBeTruthy();
+    await expect(pingPromise).resolves.toBe(true);
 
     ws.terminate();
   });
@@ -137,5 +143,17 @@ describe('websocket updates', () => {
         });
       }),
     ).resolves.toBeUndefined();
+  });
+
+  it('rejects websocket connections without bearer credentials', async () => {
+    const address = server.address() as AddressInfo;
+    const url = `ws://127.0.0.1:${address.port}/ws`;
+    const ws = new WebSocket(url);
+
+    const error = await new Promise<Error>((resolve) => {
+      ws.once('error', (err) => resolve(err as Error));
+    });
+
+    expect(error.message).toContain('401');
   });
 });
