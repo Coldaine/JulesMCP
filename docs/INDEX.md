@@ -41,8 +41,11 @@ Complete documentation for the Jules Control Room Backend - a **personal, single
 
 ### Research
 
+- **[Executive Brief](./gemini/EXECUTIVE_BRIEF.md)** - Quick framework decision summary (start here!)
 - **[MCP Research](./gemini/MCPResearch.md)** - Model Context Protocol research
 - **[Merge Analysis](./gemini/mergeAnalysis.md)** - Technical merge analysis
+- **[Strategic Update](./gemini/strategicUpdate.md)** - FastMCP 2.0 framework analysis and revised strategy
+- **[Strategy Comparison](./gemini/STRATEGY_COMPARISON.md)** - EasyMCP vs FastMCP 2.0 quick reference
 
 ### Reviews
 
@@ -69,8 +72,11 @@ docs/
 │   ├── mergeplanOne.md            # Merge strategy
 │   └── functionalityLoss.md      # Feature analysis
 ├── gemini/
+│   ├── EXECUTIVE_BRIEF.md         # Quick framework decision
 │   ├── MCPResearch.md             # MCP research
-│   └── mergeAnalysis.md           # Merge analysis
+│   ├── mergeAnalysis.md           # Merge analysis
+│   ├── strategicUpdate.md         # FastMCP 2.0 strategy update
+│   └── STRATEGY_COMPARISON.md     # Framework comparison
 └── reviews/
     └── test-coverage-improvements.md  # Test improvements
 ```
