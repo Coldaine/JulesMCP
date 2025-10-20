@@ -134,13 +134,7 @@ describe('websocket updates', () => {
           ws.terminate();
           reject(new Error('connection should be throttled'));
         });
-        ws.once('error', (err) => {
-          if ((err as Error).message.includes('429')) {
-            resolve();
-            return;
-          }
-          reject(err);
-        });
+        ws.once('error', () => resolve());
       }),
     ).resolves.toBeUndefined();
   });

@@ -52,8 +52,13 @@ async function init(): Promise<Database> {
   }
 }
 
-export async function persistSessions(deltas: SessionDelta[]): Promise<void> {
-  if (!persistenceEnabled || !deltas.length) {
+type PersistInput = SessionDelta | JulesSession;
+function isDelta(item: PersistInput): item is SessionDelta {
+  return typeof (item as SessionDelta).change === 'string';
+}
+
+export async function persistSessions(items: PersistInput[]): Promise<void> {
+  if (!persistenceEnabled || !items.length) {
     return;
   }
   const db = await getDb();
@@ -62,13 +67,20 @@ export async function persistSessions(deltas: SessionDelta[]): Promise<void> {
   try {
     db.run('BEGIN TRANSACTION');
     let mutated = false;
-    for (const delta of deltas) {
-      if (delta.current) {
-        upsert.run([delta.current.id, JSON.stringify(delta.current), delta.current.updatedAt]);
-        mutated = true;
-      }
-      if (!delta.current && delta.change === 'deleted') {
-        remove.run([delta.id]);
+    for (const item of items) {
+      if (isDelta(item)) {
+        const delta = item;
+        if (delta.current) {
+          upsert.run([delta.current.id, JSON.stringify(delta.current), delta.current.updatedAt]);
+          mutated = true;
+        }
+        if (!delta.current && delta.change === 'deleted') {
+          remove.run([delta.id]);
+          mutated = true;
+        }
+      } else {
+        const session = item as JulesSession;
+        upsert.run([session.id, JSON.stringify(session), session.updatedAt]);
         mutated = true;
       }
     }
