@@ -3,9 +3,8 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import type { JulesSession } from '@shared/types';
+import type { JulesSession, SessionDelta } from '@shared/types';
 import initSqlJs, { type Database } from 'sql.js';
-
 import { logError, logEvent } from './logging.js';
 
 export const persistenceEnabled = process.env.PERSIST === '1';
@@ -53,26 +52,48 @@ async function init(): Promise<Database> {
   }
 }
 
-export async function persistSessions(sessions: JulesSession[]): Promise<void> {
-  if (!persistenceEnabled || !sessions.length) {
+type PersistInput = SessionDelta | JulesSession;
+function isDelta(item: PersistInput): item is SessionDelta {
+  return typeof (item as SessionDelta).change === 'string';
+}
+
+export async function persistSessions(items: PersistInput[]): Promise<void> {
+  if (!persistenceEnabled || !items.length) {
     return;
   }
   const db = await getDb();
-  const stmt = db.prepare(
-    'INSERT OR REPLACE INTO sessions (id, data, updated_at) VALUES (?, ?, ?)',
-  );
+  const upsert = db.prepare('INSERT OR REPLACE INTO sessions (id, data, updated_at) VALUES (?, ?, ?)');
+  const remove = db.prepare('DELETE FROM sessions WHERE id = ?');
   try {
     db.run('BEGIN TRANSACTION');
-    for (const session of sessions) {
-      stmt.run([session.id, JSON.stringify(session), session.updatedAt]);
+    let mutated = false;
+    for (const item of items) {
+      if (isDelta(item)) {
+        const delta = item;
+        if (delta.current) {
+          upsert.run([delta.current.id, JSON.stringify(delta.current), delta.current.updatedAt]);
+          mutated = true;
+        }
+        if (!delta.current && delta.change === 'deleted') {
+          remove.run([delta.id]);
+          mutated = true;
+        }
+      } else {
+        const session = item as JulesSession;
+        upsert.run([session.id, JSON.stringify(session), session.updatedAt]);
+        mutated = true;
+      }
     }
     db.run('COMMIT');
-    await flush(db);
+    if (mutated) {
+      await flush(db);
+    }
   } catch (error) {
     db.run('ROLLBACK');
     logError({ msg: 'persistence_write_failed', err: error as Error });
   } finally {
-    stmt.free();
+    upsert.free();
+    remove.free();
   }
 }
 

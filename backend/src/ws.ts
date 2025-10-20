@@ -8,6 +8,7 @@ import { listSessions } from './julesClient.js';
 import { logError, logEvent } from './logging.js';
 import { notifyDelta } from './notifier.js';
 import { loadSessions, persistSessions, persistenceEnabled } from './persistence.js';
+import { enforceRateLimit, isIpAllowed, sanitizeIp } from './security.js';
 
 interface JulesWebSocket extends WebSocket {
   isAlive?: boolean;
@@ -67,8 +68,31 @@ export function setupWebSockets(server: Server) {
     logError({ msg: 'ws_server_error', err: error as Error });
   });
 
+  wss.on('headers', (headers, request) => {
+    const protocol = (request as IncomingMessage & { acceptedProtocol?: string }).acceptedProtocol;
+    const hasProtocolHeader = headers.some((value) =>
+      value.toLowerCase().startsWith('sec-websocket-protocol'),
+    );
+    if (protocol && !hasProtocolHeader) {
+      headers.push(`Sec-WebSocket-Protocol: ${protocol}`);
+    }
+  });
+
   server.on('upgrade', (request, socket, head) => {
-    if (!authWs(request)) {
+    const clientIp = extractIp(request);
+    if (!isIpAllowed(clientIp)) {
+      socket.write('HTTP/1.1 403 Forbidden\r\n\r\n');
+      socket.destroy();
+      return;
+    }
+
+    if (enforceRateLimit(`${clientIp ?? ''}:/ws`, 60)) {
+      socket.write('HTTP/1.1 429 Too Many Requests\r\n\r\n');
+      socket.destroy();
+      return;
+    }
+
+    if (!authWs(request as any)) {
       socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
       socket.destroy();
       return;
@@ -110,7 +134,7 @@ export function setupWebSockets(server: Server) {
       const deltas = diffSessions(cache, nextMap);
       cache = nextMap;
       if (deltas.length) {
-        await persistSessions(deltas.map((delta) => delta.current).filter(Boolean) as JulesSession[]);
+        await persistSessions(deltas);
         await notifyDelta(deltas);
         broadcast(clients, {
           type: 'session_update',
@@ -192,4 +216,18 @@ function selectProtocol(request: IncomingMessage): string | null {
     .filter(Boolean);
   const selected = values.find((value) => value.toLowerCase().startsWith('bearer.'));
   return selected ?? null;
+}
+
+function extractIp(request: IncomingMessage): string | undefined {
+  const header = request.headers['x-forwarded-for'];
+  if (typeof header === 'string' && header.length) {
+    return sanitizeIp(header.split(',')[0]?.trim());
+  }
+  if (Array.isArray(header) && header.length) {
+    return sanitizeIp(header[0]);
+  }
+  if (typeof request.headers['x-real-ip'] === 'string') {
+    return sanitizeIp(request.headers['x-real-ip']);
+  }
+  return sanitizeIp(request.socket.remoteAddress);
 }

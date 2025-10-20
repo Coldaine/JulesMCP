@@ -2,7 +2,7 @@ import express from 'express';
 import request from 'supertest';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ipAllow, rateLimit } from '../security.js';
+import { enforceRateLimit, ipAllow, isIpAllowed, rateLimit, resetRateLimits, sanitizeIp } from '../security.js';
 
 describe('ipAllow', () => {
   afterEach(() => {
@@ -43,6 +43,18 @@ describe('ipAllow', () => {
     app.get('/allowed', ipAllow, (_req, res) => res.json({ ok: true }));
     const res = await request(app).get('/allowed');
     expect(res.status).toBe(200);
+  });
+});
+
+describe('isIpAllowed', () => {
+  it('rejects empty addresses when allowlist set', () => {
+    process.env.ALLOWLIST = '203.0.113.';
+    expect(isIpAllowed('')).toBe(false);
+  });
+
+  it('normalises ipv6 mapped addresses', () => {
+    process.env.ALLOWLIST = '127.0.0.';
+    expect(isIpAllowed('::ffff:127.0.0.1')).toBe(true);
   });
 });
 
@@ -98,5 +110,15 @@ describe('rateLimit', () => {
     vi.setSystemTime(base + 60_001);
     const allowed = await request(app).get('/limited');
     expect(allowed.status).toBe(200);
+  });
+
+  it('can be reset', () => {
+    const key = `${sanitizeIp('203.0.113.5')}:test`;
+    for (let i = 0; i < 3; i += 1) {
+      enforceRateLimit(key, 2, 1_000);
+    }
+    expect(enforceRateLimit(key, 2, 1_000)).toBe(true);
+    resetRateLimits();
+    expect(enforceRateLimit(key, 2, 1_000)).toBe(false);
   });
 });
