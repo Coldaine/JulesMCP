@@ -1,6 +1,8 @@
 # Documentation Index
 
-Complete documentation for the Jules Control Room Backend project.
+Complete documentation for the Jules Control Room Backend - a **personal, single-user tool** for managing Jules AI coding sessions.
+
+> **🏠 Personal Tool:** This project is designed for individual developers, not teams or enterprise deployment. Documentation reflects this scope.
 
 ## Quick Start
 
@@ -12,8 +14,8 @@ Complete documentation for the Jules Control Room Backend project.
 
 - **[Development Guide](./development-guide.md)** - Complete development workflow, architecture, and commands
 - **[Code Quality & Linting](./linting.md)** - Automated linting, ESLint rules, and best practices
-- **[API Examples](./api-examples.md)** - REST and WebSocket API usage examples
-- **[Deployment Guide](./deployment.md)** - Production deployment, Docker, security, and monitoring
+- **[Personal Deployment](./deployment.md)** - Running on your local machine or home server
+- **[Scope Update](./SCOPE_UPDATE.md)** - Boundaries that keep this as a solo tool
 
 ### Quick References
 
@@ -54,9 +56,8 @@ Complete documentation for the Jules Control Room Backend project.
 docs/
 ├── INDEX.md                        # This file
 ├── development-guide.md            # Primary development docs
-├── deployment.md                   # Production deployment
+├── deployment.md                   # Personal deployment
 ├── linting.md                      # Code quality guide
-├── api-examples.md                 # API usage examples
 ├── linting-quick-reference.md      # Quick lint commands
 ├── linting-detailed.md             # Detailed lint setup
 ├── implementation-notes.md         # Backend implementation
@@ -76,42 +77,43 @@ docs/
 
 ---
 
-## For Developers
+## For Personal Use
 
-### New to the Project?
+### Setting Up for the First Time?
 
-1. Start with **[README](../README.md)** for project overview
-2. Read **[Development Guide](./development-guide.md)** for architecture and commands
-3. Check **[Code Quality](./linting.md)** for code standards
-4. Try **[API Examples](./api-examples.md)** to test the API
+1. Start with **[README](../README.md)** - Understand it's a personal tool
+2. Read **[Development Guide](./development-guide.md)** - Architecture and setup
+3. Check **[Code Quality](./linting.md)** - Auto-fix configuration
+4. Run the test suite (`npm run test`) to see end-to-end flows in action
 
-### Setting Up Development Environment?
+### Want to Run It Persistently?
 
-1. **[Development Guide](./development-guide.md)** - Setup instructions
-2. **[Linting](./linting.md)** - Configure auto-fix on save
-3. **[API Examples](./api-examples.md)** - Test your setup
-
-### Deploying to Production?
-
-1. **[Deployment Guide](./deployment.md)** - Complete deployment checklist
+1. **[Personal Deployment](./deployment.md)** - Docker or always-on options
 2. **[Development Guide](./development-guide.md#environment-variables)** - Environment configuration
 
 ---
 
 ## For AI Assistants
 
+**⚠️ Important Context:** This is a **personal, single-user tool**. Avoid:
+
+- Multi-user/multi-tenant features
+- Enterprise deployment patterns
+- Complex scaling solutions
+- Over-engineering
+
 ### Working on this Codebase?
 
-1. **[Claude Instructions](./claude-instructions.md)** - Comprehensive project context
-2. **[Development Guide](./development-guide.md)** - Architecture and patterns
+1. **[Claude Instructions](./claude-instructions.md)** - Project context and scope
+2. **[Development Guide](./development-guide.md)** - Architecture (kept simple)
 3. **[Implementation Notes](./implementation-notes.md)** - Design decisions
 
 ### Making Code Changes?
 
+- Keep solutions simple and pragmatic
 - Auto-fix runs on save and commit (see [Linting](./linting.md))
 - Run `npm run lint:fix` after generating code
 - All tests must pass: `npm run test`
-- Type checking must pass: `npm run typecheck`
 
 ---
 
@@ -131,7 +133,7 @@ Auto-fix is enabled for linting (see [Linting Guide](./linting.md)).
 
 - Keep README minimal (overview + quick start only)
 - Detailed docs go in `/docs/`
-- Use clear headings and examples
+- Use clear headings and concise explanations
 - Link between related documents
 
 ---
@@ -139,6 +141,5 @@ Auto-fix is enabled for linting (see [Linting Guide](./linting.md)).
 ## Need Help?
 
 - Check the relevant guide in this index
-- Review [API Examples](./api-examples.md) for usage patterns
 - See [Development Guide](./development-guide.md) for troubleshooting
 - Review [Codebase Survey](./plan/codebase-survey.md) for known issues

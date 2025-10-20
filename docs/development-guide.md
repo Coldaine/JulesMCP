@@ -2,6 +2,8 @@
 
 This guide covers setup, architecture, testing, and development workflows for the Jules Control Room Backend.
 
+> **🏠 Personal Tool:** This is a single-user application for your own Jules AI development work. It's not designed for multi-user teams or enterprise deployment. Think of it as your personal mission control for AI coding sessions.
+
 ## Table of Contents
 
 - [Quick Start](#quick-start)
@@ -19,7 +21,7 @@ This guide covers setup, architecture, testing, and development workflows for th
 
 - Node.js 20+
 - npm 9+
-- Optional: Docker & Docker Compose
+- Optional: Docker (for containerized personal setup)
 
 ### Setup
 
@@ -55,9 +57,11 @@ docker compose up -d
 
 ### Workspace Structure
 
+This is a simple monorepo structure for a single-user tool:
+
 - **Root**: npm workspace orchestrator proxying commands to backend
 - **backend/**: Express server with TypeScript
-- **shared/**: Shared type definitions (DTOs) used across packages
+- **shared/**: Shared type definitions for future UI integration
 
 ### Available Scripts
 
@@ -117,10 +121,10 @@ All endpoints under `/api`:
 - **REST**: `Authorization: Bearer <LOCAL_TOKEN>`
 - **WebSocket**: `Sec-WebSocket-Protocol: bearer.<LOCAL_TOKEN>`
 
-#### **security.ts** - IP Allowlist + Rate Limiting
+#### **security.ts** - Optional Network Access Control
 
-- `ipAllow`: enforces CIDR prefixes from `ALLOWLIST` env var
-- `rateLimit`: 60 req/min per IP+path (in-memory)
+- `ipAllow`: optionally restrict to specific IPs via `ALLOWLIST` (for LAN access)
+- `rateLimit`: 60 req/min per IP+path (prevents runaway loops)
 
 #### **ws.ts** - WebSocket Session Broadcasting
 
@@ -272,18 +276,18 @@ All files must pass strict TypeScript checking.
 
 Located in `backend/.env`:
 
-| Variable | Purpose | Default |
-|----------|---------|---------|
-| `JULES_API_KEY` | Jules API service key | - |
-| `LOCAL_TOKEN` | Bearer token for auth (REST + WS) | - |
-| `PORT` | Server listening port | 3001 |
-| `ALLOWLIST` | Comma-separated CIDR prefixes for LAN | empty (localhost only) |
-| `CORS_ORIGIN` | Explicit CORS origins (remote UI) | unset (single-origin mode) |
-| `PERSIST` | Enable SQLite session history | unset (disabled) |
-| `NOTIFY_WEBHOOK` | HTTPS endpoint for session deltas | unset (disabled) |
-| `JULES_API_BASE` | Jules API base URL | https://api.jules.ai/v1 |
+| Variable         | Purpose                               | Default                    |
+| ---------------- | ------------------------------------- | -------------------------- |
+| `JULES_API_KEY`  | Jules API service key                 | -                          |
+| `LOCAL_TOKEN`    | Bearer token for auth (REST + WS)     | -                          |
+| `PORT`           | Server listening port                 | 3001                       |
+| `ALLOWLIST`      | Comma-separated CIDR prefixes for LAN | empty (localhost only)     |
+| `CORS_ORIGIN`    | Explicit CORS origins (remote UI)     | unset (single-origin mode) |
+| `PERSIST`        | Enable SQLite session history         | unset (disabled)           |
+| `NOTIFY_WEBHOOK` | HTTPS endpoint for session deltas     | unset (disabled)           |
+| `JULES_API_BASE` | Jules API base URL                    | https://api.jules.ai/v1    |
 
-**Security**: Never expose without strong `LOCAL_TOKEN`, firewall rules, and explicit `ALLOWLIST`.
+**Personal Security**: Keep `LOCAL_TOKEN` private. Typically run on localhost only. Use `ALLOWLIST` if accessing from other devices on your home network.
 
 ---
 

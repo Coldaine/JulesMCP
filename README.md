@@ -1,16 +1,19 @@
 # Jules Control Room Backend
 
-Secure, single-origin backend for orchestrating Jules sessions with strict auth, resilient WebSockets, and observability baked in.
+**Personal AI development control center** - Secure backend for orchestrating Jules AI coding sessions with real-time monitoring, WebSocket updates, and complete session control.
+
+> **Note:** This is a **single-user personal tool** designed for individual developers working with Jules AI. It's not intended for multi-user deployments or enterprise use.
 
 ## 📚 Documentation
 
 **→ See [docs/INDEX.md](./docs/INDEX.md) for complete documentation**
 
 Quick links:
+
 - **[Development Guide](./docs/development-guide.md)** - Architecture, setup, and workflow
-- **[API Examples](./docs/api-examples.md)** - REST and WebSocket examples
-- **[Deployment Guide](./docs/deployment.md)** - Production deployment
+- **[Personal Deployment](./docs/deployment.md)** - Running on your local machine or home server
 - **[Code Quality](./docs/linting.md)** - Linting and quality standards
+- **[Scope Update](./docs/SCOPE_UPDATE.md)** - Constraints for this solo-use tool
 
 ---
 
@@ -36,9 +39,11 @@ jules-control-room/
 
 - Node.js 20+
 - npm 9+
-- Optional: Docker & Docker Compose
+- Optional: Docker (for containerized personal deployment)
 
 ## Getting Started
+
+**This is a personal tool - it runs on your machine or home server:**
 
 ```bash
 npm install
@@ -62,26 +67,29 @@ Core npm scripts are proxied through the root workspace:
 
 ## Environment Variables (`backend/.env`)
 
-| Variable | Purpose |
-| --- | --- |
-| `JULES_API_KEY` | Jules service key, injected into outbound API calls |
-| `LOCAL_TOKEN` | Bearer token required for both REST and WebSocket clients |
-| `PORT` | Listening port (defaults to `3001`) |
-| `ALLOWLIST` | Comma-separated CIDR prefixes for LAN exposure (empty = localhost only) |
-| `CORS_ORIGIN` | Explicit origins when serving a remote UI (unset keeps single-origin mode) |
-| `PERSIST` | Set to `1` to enable optional SQLite history (`sql.js`) |
-| `NOTIFY_WEBHOOK` | Optional HTTPS endpoint notified on session deltas |
+| Variable         | Purpose                                                                    |
+| ---------------- | -------------------------------------------------------------------------- |
+| `JULES_API_KEY`  | Jules service key, injected into outbound API calls                        |
+| `LOCAL_TOKEN`    | Bearer token required for both REST and WebSocket clients                  |
+| `PORT`           | Listening port (defaults to `3001`)                                        |
+| `ALLOWLIST`      | Comma-separated CIDR prefixes for LAN exposure (empty = localhost only)    |
+| `CORS_ORIGIN`    | Explicit origins when serving a remote UI (unset keeps single-origin mode) |
+| `PERSIST`        | Set to `1` to enable optional SQLite history (`sql.js`)                    |
+| `NOTIFY_WEBHOOK` | Optional HTTPS endpoint notified on session deltas                         |
 
-**Never** expose the backend without a strong `LOCAL_TOKEN`, firewall rules, and an explicit `ALLOWLIST`.
+**Personal use note:** Keep `LOCAL_TOKEN` private. Only expose beyond localhost if you need to access from other devices on your home network.
 
 ## Security & Networking
 
-- Unified origin: static assets can be served from `backend/public/` to avoid CORS.
-- REST auth: `Authorization: Bearer <LOCAL_TOKEN>`.
-- WebSocket auth: `Sec-WebSocket-Protocol: bearer.<LOCAL_TOKEN>`.
-- Rate limiting: 60 requests/minute per IP+path.
-- LAN mode: only prefixes in `ALLOWLIST` are accepted.
-- No secrets in logs: request bodies, headers, and env values are excluded.
+**Single-user security model** (you control access):
+
+- REST auth: `Authorization: Bearer <LOCAL_TOKEN>` (set your own token)
+- WebSocket auth: `Sec-WebSocket-Protocol: bearer.<LOCAL_TOKEN>`
+- Rate limiting: 60 requests/minute (prevents accidental loops)
+- LAN mode: Optionally expose to your local network via `ALLOWLIST`
+- No secrets in logs: API keys and tokens are filtered
+
+**Typical usage:** Run locally on `localhost:3001` with no external exposure.
 
 ## Observability
 
@@ -121,8 +129,8 @@ A scripted Vitest integration test (`routes.test.ts`) mocks the Jules API to cre
 ## More Information
 
 See the [Documentation Index](./docs/INDEX.md) for:
-- Complete API reference
+
 - Architecture details
 - Deployment guides
 - Testing strategies
-- And more...
+- Solo-tool scope notes (no public examples provided)

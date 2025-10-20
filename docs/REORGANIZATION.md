@@ -8,35 +8,33 @@ All documentation has been consolidated into the `/docs/` directory with a clear
 
 ### Files Moved
 
-| Original Location | New Location | Purpose |
-|------------------|--------------|---------|
-| `LINTING.md` | `docs/linting-quick-reference.md` | Quick lint commands |
-| `AUTO_LINTING.md` | `docs/linting-detailed.md` | Detailed lint setup |
-| `CLAUDE.md` | `docs/claude-instructions.md` | AI assistant guidance |
-| `IMPLEMENTATION.md` | `docs/implementation-notes.md` | Backend highlights |
-| `JulesControlRoomUI_Overview.md` | `docs/ui-overview.md` | UI documentation |
+| Original Location                | New Location                      | Purpose               |
+| -------------------------------- | --------------------------------- | --------------------- |
+| `LINTING.md`                     | `docs/linting-quick-reference.md` | Quick lint commands   |
+| `AUTO_LINTING.md`                | `docs/linting-detailed.md`        | Detailed lint setup   |
+| `CLAUDE.md`                      | `docs/claude-instructions.md`     | AI assistant guidance |
+| `IMPLEMENTATION.md`              | `docs/implementation-notes.md`    | Backend highlights    |
+| `JulesControlRoomUI_Overview.md` | `docs/ui-overview.md`             | UI documentation      |
 
 ### New Documents Created
 
-| File | Purpose |
-|------|---------|
-| `docs/INDEX.md` | Master documentation index with navigation |
+| File                        | Purpose                                                |
+| --------------------------- | ------------------------------------------------------ |
+| `docs/INDEX.md`             | Master documentation index with navigation             |
 | `docs/development-guide.md` | Comprehensive development documentation (consolidated) |
-| `docs/deployment.md` | Complete deployment guide |
-| `docs/linting.md` | Code quality and linting guide |
-| `docs/api-examples.md` | API usage examples and reference |
+| `docs/deployment.md`        | Complete deployment guide                              |
+| `docs/linting.md`           | Code quality and linting guide                         |
 
 ## Documentation Structure
 
-```
+```text
 docs/
 ├── INDEX.md                        # Master index (START HERE)
 │
 ├── Core Guides
 │   ├── development-guide.md       # Setup, architecture, testing
 │   ├── deployment.md              # Production deployment
-│   ├── linting.md                 # Code quality standards
-│   └── api-examples.md            # API usage reference
+│   └── linting.md                 # Code quality standards
 │
 ├── Quick References
 │   ├── linting-quick-reference.md # Quick lint commands
@@ -82,17 +80,20 @@ Only essential files remain in the root:
 ### 2. Logical Grouping
 
 **For Developers:**
+
 - Setup → Development Guide
-- API testing → API Examples
+- API usage → Development Guide (API section)
 - Code quality → Linting Guide
 - Production → Deployment Guide
 
 **For AI Assistants:**
+
 - Project context → Claude Instructions
 - Architecture → Development Guide
 - Design decisions → Implementation Notes
 
 **For Maintainers:**
+
 - Planning docs → `docs/plan/`
 - Analysis → `docs/gemini/`, `docs/merge/`
 - Reviews → `docs/reviews/`
@@ -100,28 +101,28 @@ Only essential files remain in the root:
 ### 3. Reduced Duplication
 
 Combined multiple overlapping documents:
+
 - CLAUDE.md + IMPLEMENTATION.md → development-guide.md
 - LINTING.md + AUTO_LINTING.md → linting.md + quick references
-- examples/README.md → api-examples.md (examples/ kept for scripts)
+- Removed the standalone examples directory; API usage guidance consolidated into development-guide.md
 
 ### 4. Clear Entry Points
 
 **New developers:**
+
 1. README.md (overview)
 2. docs/INDEX.md (navigation)
 3. docs/development-guide.md (deep dive)
 
 **Deploying:**
+
 1. README.md (quick start)
 2. docs/deployment.md (production guide)
-
-**API usage:**
-1. examples/ (code snippets)
-2. docs/api-examples.md (complete reference)
 
 ## README Updates
 
 The main README now:
+
 - ✅ Links prominently to documentation index
 - ✅ Provides quick start only
 - ✅ References docs for detailed information
@@ -134,13 +135,13 @@ The main README now:
 - **Easy navigation**: Clear index with logical grouping
 - **No duplication**: Single source for each topic
 - **Quick access**: Quick reference guides for common tasks
-- **Complete info**: Comprehensive guides for deep dives
+- **Complete info**: Comprehensive guides for deep dives and usage patterns
 
 ### For AI Agents
 
 - **Clear context**: All related info consolidated
 - **Easy to find**: Logical structure matches mental models
-- **Complete picture**: Architecture + implementation + examples
+- **Complete picture**: Architecture + implementation + usage guidance
 - **Historical context**: Planning docs preserved separately
 
 ### For Maintenance
@@ -154,19 +155,20 @@ The main README now:
 
 ### Finding Old Docs
 
-| If you're looking for... | It's now in... |
-|-------------------------|----------------|
-| Claude AI context | `docs/claude-instructions.md` |
-| Linting commands | `docs/linting-quick-reference.md` or `docs/linting.md` |
-| Implementation details | `docs/implementation-notes.md` or `docs/development-guide.md` |
-| UI architecture | `docs/ui-overview.md` |
-| API examples | `docs/api-examples.md` |
-| Deployment steps | `docs/deployment.md` |
-| Setup instructions | `docs/development-guide.md` |
+| If you're looking for... | It's now in...                                                |
+| ------------------------ | ------------------------------------------------------------- |
+| Claude AI context        | `docs/claude-instructions.md`                                 |
+| Linting commands         | `docs/linting-quick-reference.md` or `docs/linting.md`        |
+| Implementation details   | `docs/implementation-notes.md` or `docs/development-guide.md` |
+| UI architecture          | `docs/ui-overview.md`                                         |
+| API usage guidance       | `docs/development-guide.md` (API section)                     |
+| Deployment steps         | `docs/deployment.md`                                          |
+| Setup instructions       | `docs/development-guide.md`                                   |
 
 ### Broken Links
 
 All internal links have been updated. External references may need updating:
+
 - `CLAUDE.md` → `docs/claude-instructions.md`
 - `LINTING.md` → `docs/linting.md`
 - `IMPLEMENTATION.md` → `docs/implementation-notes.md`
@@ -187,14 +189,15 @@ All internal links have been updated. External references may need updating:
 2. Update docs/INDEX.md when adding new docs
 3. Consolidate related topics into single guides
 4. Archive outdated planning docs
-5. Add examples for new features
+5. Capture new feature usage snippets in development-guide.md
 
 ## Feedback
 
 The documentation structure should serve:
+
 - ✅ Quick lookups (quick reference docs)
 - ✅ Comprehensive learning (guide docs)
-- ✅ API usage (examples + reference)
+- ✅ API usage (covered in development-guide.md)
 - ✅ Production deployment (deployment guide)
 - ✅ Historical context (planning docs)
 

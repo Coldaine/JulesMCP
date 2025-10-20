@@ -1,21 +1,35 @@
-# Deployment Guide
+# Personal Deployment Guide
 
-This guide covers deploying the Jules Control Room Backend to production.
+This guide covers running the Jules Control Room Backend on your local machine or home server.
 
-## Deployment Checklist
+> **🏠 Personal Tool:** This is designed for single-user personal use, not enterprise deployment. Run it on your development machine or a home server you control.
 
-1. ✅ Provide production secrets (`JULES_API_KEY`, `LOCAL_TOKEN`)
-2. ✅ Populate `ALLOWLIST` when exposing beyond localhost
-3. ✅ Decide on persistence (`PERSIST=1`) and map the `data/` volume
-4. ✅ Set `NOTIFY_WEBHOOK` if external notifications are desired
-5. ✅ Build the container with `docker compose build`
-6. ✅ Run with `docker compose up -d`
+## Deployment Options
+
+### Option 1: Local Development (Recommended)
+
+Run directly on your machine with hot reload - perfect for daily use.
+
+### Option 2: Docker (Personal Server)
+
+Run in a container on your home server for always-on access.
+
+### Option 3: Always-Running Process
+
+Use PM2 or systemd for persistent local operation.
+
+## Quick Setup Checklist
+
+1. ✅ Set your `JULES_API_KEY` and `LOCAL_TOKEN`
+2. ✅ Run locally on `localhost:3001` (default)
+3. ✅ Optional: Enable persistence (`PERSIST=1`) for session history
+4. ✅ Optional: Set `ALLOWLIST` to access from other devices on your home network
 
 ---
 
-## Docker Deployment
+## Docker Deployment (Personal Server)
 
-### Build & Run
+### Build & Run on Your Machine
 
 ```bash
 # Build the container
@@ -31,14 +45,13 @@ docker compose logs -f
 docker compose down
 ```
 
-### Multi-Stage Dockerfile
+### About the Dockerfile
 
-The Dockerfile uses Node 20 with:
+Simple, secure Node 20 container:
 
-- Multi-stage build (build → runtime)
+- Multi-stage build for smaller image
 - Healthcheck endpoint (`/healthz`)
-- Non-root runtime user
-- Optimized layer caching
+- Non-root user for basic security
 
 ### Docker Compose Stack
 
@@ -90,25 +103,32 @@ JULES_API_BASE=https://api.jules.ai/v1
 
 ---
 
-## Security Best Practices
+## Security for Personal Use
 
-### Authentication
+### Basic Security
 
-- **Generate strong tokens**: Use `openssl rand -hex 32` for `LOCAL_TOKEN`
-- **Never commit secrets**: Keep `.env` files out of version control
-- **Rotate tokens regularly**: Change `LOCAL_TOKEN` periodically
+- **Generate a strong token**: `openssl rand -hex 32` for `LOCAL_TOKEN`
+- **Keep secrets private**: Don't commit `.env` files
+- **Localhost first**: Run on `127.0.0.1` unless you need home network access
 
-### Network Security
+### Home Network Access (Optional)
 
-- **Use ALLOWLIST**: Restrict access to known IP ranges
-- **Enable HTTPS**: Use a reverse proxy (nginx, Caddy) for TLS termination
-- **Firewall rules**: Only expose necessary ports
+If you want to access from your phone/tablet on the same WiFi:
 
-### Monitoring
+1. Set `ALLOWLIST` to your home network (e.g., `192.168.1.0/24`)
+2. Firewall will still block internet access
+3. Token still required for authentication
 
-- **Health checks**: Monitor `/healthz` and `/readyz` endpoints
-- **Log aggregation**: Collect structured JSON logs for analysis
-- **Rate limiting**: Monitor rate limit metrics for abuse patterns
+### Don't Overthink It
+
+This is your personal tool running on your machine. You don't need:
+
+- Enterprise monitoring
+- Log aggregation services
+- Complex firewall rules
+- Load balancers or clustering
+
+Just keep your `LOCAL_TOKEN` private and you're good!
 
 ---
 
@@ -172,161 +192,88 @@ The webhook receives `SessionDelta` objects:
 
 ---
 
-## Reverse Proxy Configuration
+## Optional: Reverse Proxy (Advanced)
 
-### Nginx Example
-
-```nginx
-server {
-    listen 443 ssl http2;
-    server_name api.yourdomain.com;
-
-    ssl_certificate /path/to/cert.pem;
-    ssl_certificate_key /path/to/key.pem;
-
-    location / {
-        proxy_pass http://localhost:3001;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-}
-```
-
-### Caddy Example
+If you want HTTPS on your home network, you can use Caddy:
 
 ```caddyfile
-api.yourdomain.com {
+localhost {
     reverse_proxy localhost:3001
 }
 ```
 
+**Note:** Most personal use cases don't need this. Just use `http://localhost:3001`.
+
 ---
 
-## Monitoring & Observability
+## Monitoring (Simple)
 
 ### Health Endpoints
 
-- **`/healthz`**: Liveness check (always returns 200)
-- **`/readyz`**: Readiness check (probes Jules API with 1s timeout)
+- **`/healthz`**: Check if server is running
+- **`/readyz`**: Check if Jules API is accessible
 
-### Logging
-
-Structured JSON logs are written to stdout:
-
-```json
-{
-  "level": 30,
-  "time": "2025-10-19T12:00:00.000Z",
-  "msg": "server_started",
-  "port": 3001
-}
-```
-
-### Log Aggregation
-
-Use a log aggregation tool:
-
-- **Docker**: `docker compose logs -f`
-- **Cloud**: CloudWatch, Datadog, Splunk
-- **Self-hosted**: ELK stack, Loki
-
-### Metrics
-
-Monitor these key metrics:
-
-- Request rate and latency
-- WebSocket connection count
-- Jules API response times
-- Rate limit hits
-- Error rates by type
-
----
-
-## Troubleshooting
-
-### Container Won't Start
+Just curl these occasionally to verify things are working:
 
 ```bash
-# Check logs
-docker compose logs
-
-# Verify environment variables
-docker compose config
-
-# Test locally first
-npm run dev
+curl http://localhost:3001/healthz
+curl http://localhost:3001/readyz
 ```
 
-### WebSocket Connections Fail
+### Logs
 
-1. Check `LOCAL_TOKEN` is correct
-2. Verify `Sec-WebSocket-Protocol` header
-3. Check firewall allows WebSocket upgrades
-4. Ensure reverse proxy supports WebSocket
-
-### High Memory Usage
-
-- SQLite persistence enabled? Monitor `data/sessions.sqlite` size
-- Check WebSocket client count (may need to limit)
-- Review log retention policies
-
-### API Timeout Errors
-
-1. Check Jules API availability
-2. Review `JULES_API_BASE` configuration
-3. Verify network connectivity
-4. Check `/readyz` endpoint status
-
----
-
-## Scaling Considerations
-
-### Horizontal Scaling
-
-- WebSocket sessions are not currently shared across instances
-- Use sticky sessions or session affinity at load balancer
-- Consider Redis for shared session state (future enhancement)
-
-### Vertical Scaling
-
-- Memory: ~100MB base + ~10MB per 1000 active sessions
-- CPU: Minimal, mostly I/O bound
-- Storage: Depends on persistence and log retention
-
----
-
-## Maintenance
-
-### Updating Dependencies
+The server logs to console. If running with Docker:
 
 ```bash
-# Check for updates
-npm outdated
+docker compose logs -f
+```
 
-# Update dependencies
+If running directly:
+
+```bash
+npm run dev  # Logs show in terminal
+```
+
+That's it! No need for log aggregation or complex monitoring for personal use.
+
+---
+
+## Simple Troubleshooting
+
+### Server Won't Start
+
+```bash
+# Check if port 3001 is already in use
+lsof -i :3001
+
+# Check your .env file exists
+ls backend/.env
+
+# Try running directly to see errors
+cd backend && npm run dev
+```
+
+### Can't Connect from Another Device
+
+1. Check `ALLOWLIST` includes your home network
+2. Verify firewall isn't blocking port 3001
+3. Make sure you're using the machine's local IP, not `localhost`
+
+### WebSocket Not Working
+
+- Check `LOCAL_TOKEN` is correct in your client
+- Use the right protocol: `ws://localhost:3001/ws` (not `wss://` unless you have HTTPS)
+
+---
+
+## Keeping It Updated
+
+```bash
+# Update dependencies occasionally
 npm update
 
-# Test after updates
+# Run tests to make sure things still work
 npm run test
-npm run typecheck
-npm run lint
 ```
 
-### Rolling Updates
-
-1. Build new image
-2. Test in staging
-3. Deploy with zero-downtime:
-
-```bash
-docker compose up -d --no-deps --build backend
-```
-
-### Database Migrations
-
-Currently not applicable (SQLite schema is auto-created). Future versions may include migration scripts.
+That's it! This is your personal tool - keep it simple.
