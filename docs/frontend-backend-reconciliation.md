@@ -118,6 +118,7 @@ Architecture approach for MCP (Day 2)
 5) UI surface continuity
    - Keep all UI elements (Approve, Cancel, plan preview, analytics placeholders, etc.) visible so stakeholders see the full product vision.
    - Clearly mark flows that lack backend support as “Coming soon” or similar so expectations stay aligned without hiding functionality.
+   - Prototype-only screens (GitHub analytics, repo timeline, model management, RAG notes) now render with in-app alerts noting that they still rely on bundled mock data until supporting services land.
 
 ### Variant: MCP is required Day 1 (for local model routing)
 
