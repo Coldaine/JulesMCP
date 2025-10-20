@@ -4,9 +4,10 @@ const tsResolver = path.resolve(__dirname, 'ts-resolver.cjs');
 
 module.exports = {
   root: true,
+  ignorePatterns: ['*.cjs', 'dist', 'node_modules'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: ['./tsconfig.json'],
+    project: './tsconfig.json',
     tsconfigRootDir: __dirname
   },
   env: {
@@ -35,10 +36,17 @@ module.exports = {
   },
   rules: {
     'import/order': [
-      'warn',
+      'error',
       {
-        'newlines-between': 'ignore',
-        alphabetize: { order: 'asc', caseInsensitive: true }
+        'groups': [
+          'builtin',   // node:* imports
+          'external',  // npm packages
+          'internal',  // @shared/* paths
+          ['parent', 'sibling', 'index'],  // relative imports
+          'type'       // import type statements
+        ],
+        'newlines-between': 'always',
+        'alphabetize': { order: 'asc', caseInsensitive: true }
       }
     ],
     '@typescript-eslint/consistent-type-imports': 'error',

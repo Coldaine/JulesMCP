@@ -2,6 +2,18 @@
 
 Secure, single-origin backend for orchestrating Jules sessions with strict auth, resilient WebSockets, and observability baked in.
 
+## 📚 Documentation
+
+**→ See [docs/INDEX.md](./docs/INDEX.md) for complete documentation**
+
+Quick links:
+- **[Development Guide](./docs/development-guide.md)** - Architecture, setup, and workflow
+- **[API Examples](./docs/api-examples.md)** - REST and WebSocket examples
+- **[Deployment Guide](./docs/deployment.md)** - Production deployment
+- **[Code Quality](./docs/linting.md)** - Linting and quality standards
+
+---
+
 ## Repository Layout
 
 ```
@@ -41,9 +53,12 @@ Core npm scripts are proxied through the root workspace:
 
 - `npm run build` – compile TypeScript to `backend/dist`
 - `npm run start` – run the compiled server
-- `npm run lint` – ESLint with Prettier formatting rules
+- `npm run lint` – ESLint check
+- `npm run lint:fix` – **auto-fix** all linting issues (imports, formatting, etc.)
 - `npm run typecheck` – strict TypeScript checking
 - `npm run test` – Vitest unit + integration suite
+
+> **🎉 Auto-linting enabled!** Code auto-fixes on save and on commit. See [docs/linting.md](./docs/linting.md) for details.
 
 ## Environment Variables (`backend/.env`)
 
@@ -100,3 +115,14 @@ Persistent session history (when `PERSIST=1`) is written under `/app/data/sessio
 ## Demo Flow
 
 A scripted Vitest integration test (`routes.test.ts`) mocks the Jules API to create a session, approve it, send a message, and read back activities. The WebSocket test (`ws.test.ts`) verifies heartbeats and diff broadcasts.
+
+---
+
+## More Information
+
+See the [Documentation Index](./docs/INDEX.md) for:
+- Complete API reference
+- Architecture details
+- Deployment guides
+- Testing strategies
+- And more...

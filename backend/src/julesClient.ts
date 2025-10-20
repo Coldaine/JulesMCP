@@ -1,7 +1,9 @@
-import type { CreateSessionInput, JulesSession, SessionActivity } from '@shared/types';
 import fetch, { Headers, type RequestInit } from 'node-fetch';
 
 import { logError, logEvent } from './logging.js';
+
+import type { CreateSessionInput, JulesSession, SessionActivity } from '@shared/types';
+
 
 const USER_AGENT = 'jules-control-room/1.0';
 const MAX_ATTEMPTS = 4;

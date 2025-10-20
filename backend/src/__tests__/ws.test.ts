@@ -1,10 +1,12 @@
-import type { Server } from 'node:http';
-import type { AddressInfo } from 'node:net';
-import type { SessionDelta } from '@shared/types';
 import { afterAll, beforeAll, describe, expect, it, vi, beforeEach } from 'vitest';
 import { WebSocket } from 'ws';
-import type * as JulesClient from '../julesClient.js';
+
 import { enforceRateLimit, resetRateLimits, sanitizeIp } from '../security.js';
+
+import type * as JulesClient from '../julesClient.js';
+import type { SessionDelta } from '@shared/types';
+import type { Server } from 'node:http';
+import type { AddressInfo } from 'node:net';
 
 const TOKEN = 'test-token';
 

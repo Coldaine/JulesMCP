@@ -1,7 +1,9 @@
-import type { SessionDelta } from '@shared/types';
 import fetch from 'node-fetch';
 
 import { logError, logEvent } from './logging.js';
+
+import type { SessionDelta } from '@shared/types';
+
 
 const webhookUrl = process.env.NOTIFY_WEBHOOK ?? '';
 

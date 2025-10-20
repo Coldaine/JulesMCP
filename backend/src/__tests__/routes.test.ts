@@ -1,10 +1,12 @@
-import type { Express } from 'express';
 import nock, { cleanAll } from 'nock';
 import request from 'supertest';
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import * as julesClient from '../julesClient.js';
 import { JulesHttpError } from '../julesClient.js';
+
+import type { Express } from 'express';
+
 
 const BASE = 'https://api.jules.test';
 const TOKEN = 'test-token';

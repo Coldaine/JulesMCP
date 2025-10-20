@@ -2,6 +2,10 @@
 
 Quick snippets for exercising the backend.
 
+> **📚 For complete API documentation, see [docs/api-examples.md](../docs/api-examples.md)**
+
+---
+
 ## Prerequisites
 
 1. Install dependencies (`npm install`) after setting up access to the private npm registry.

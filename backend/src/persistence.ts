@@ -3,9 +3,12 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import type { JulesSession, SessionDelta } from '@shared/types';
 import initSqlJs, { type Database } from 'sql.js';
+
 import { logError, logEvent } from './logging.js';
+
+import type { JulesSession, SessionDelta } from '@shared/types';
+
 
 export const persistenceEnabled = process.env.PERSIST === '1';
 const DATA_DIR = process.env.DATA_DIR ?? path.resolve(process.cwd(), 'data');

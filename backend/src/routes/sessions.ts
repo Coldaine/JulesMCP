@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import type { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 
 import {
@@ -12,6 +11,9 @@ import {
   sendMessage,
 } from '../julesClient.js';
 import { logError } from '../logging.js';
+
+import type { Request, Response, NextFunction } from 'express';
+
 
 const router = Router();
 

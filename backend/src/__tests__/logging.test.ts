@@ -1,9 +1,10 @@
 import { EventEmitter } from 'node:events';
 
-import type { NextFunction, Request, Response } from 'express';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { logError, logEvent, logger, withRequestId } from '../logging.js';
+
+import type { NextFunction, Request, Response } from 'express';
 
 describe('logging helpers', () => {
   afterEach(() => {

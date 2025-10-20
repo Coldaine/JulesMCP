@@ -1,6 +1,4 @@
-import type { IncomingMessage, Server } from 'node:http';
 
-import type { JulesSession, SessionDelta } from '@shared/types';
 import { WebSocket, WebSocketServer } from 'ws';
 
 import { authWs } from './auth.js';
@@ -9,6 +7,9 @@ import { logError, logEvent } from './logging.js';
 import { notifyDelta } from './notifier.js';
 import { loadSessions, persistSessions, persistenceEnabled } from './persistence.js';
 import { enforceRateLimit, isIpAllowed, sanitizeIp } from './security.js';
+
+import type { JulesSession, SessionDelta } from '@shared/types';
+import type { IncomingMessage, Server } from 'node:http';
 
 interface JulesWebSocket extends WebSocket {
   isAlive?: boolean;

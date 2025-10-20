@@ -1,6 +1,6 @@
+import type { RequestHandler } from 'express';
 import type { IncomingMessage } from 'node:http';
 
-import type { RequestHandler } from 'express';
 
 export const authHttp: RequestHandler = (req, res, next) => {
   const header = req.headers.authorization ?? '';

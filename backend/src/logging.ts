@@ -1,7 +1,9 @@
 import { randomUUID } from 'node:crypto';
 
-import type { Request, RequestHandler } from 'express';
 import createPino, { stdTimeFunctions } from 'pino';
+
+import type { Request, RequestHandler } from 'express';
+
 
 const level = process.env.LOG_LEVEL ?? (process.env.NODE_ENV === 'production' ? 'info' : 'debug');
 
