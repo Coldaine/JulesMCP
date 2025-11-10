@@ -9,7 +9,7 @@ last_reviewed: 2025-11-10
 
 # AI Assistant Guidance (agents.md)
 
-This file provides guidance to AI assistants when working with code in this repository. It is synchronized with [root CLAUDE.md](../claude.md) and adheres to the [Master Documentation Playbook](playbooks/organizational/documentation_playbook.md) and [Documentation Standards](standards.md).
+This file provides comprehensive guidance to AI assistants when working with code in this repository. It is an expanded version of [root CLAUDE.md](../claude.md) with additional sections for documentation standards and workspace navigation. Both files adhere to the [Master Documentation Playbook](playbooks/organizational/documentation_playbook.md) and [Documentation Standards](standards.md).
 
 ## Project Overview
 

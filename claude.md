@@ -8,7 +8,7 @@ last_reviewed: 2025-11-10
 ---
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository. It is synchronized with [docs/agents.md](docs/agents.md) and adheres to the [Master Documentation Playbook](docs/playbooks/organizational/documentation_playbook.md) and [Documentation Standards](docs/standards.md).
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository. An expanded version with additional sections is available at [docs/agents.md](docs/agents.md). This file adheres to the [Master Documentation Playbook](docs/playbooks/organizational/documentation_playbook.md) and [Documentation Standards](docs/standards.md).
 
 ## Project Overview
 
