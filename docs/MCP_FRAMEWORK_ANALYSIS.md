@@ -11,7 +11,7 @@ last_reviewed: 2025-11-10
 
 **Last Updated:** October 2025  
 **Status:** Strategic recommendation updated based on comprehensive research  
-**Primary Documents:** [docs/gemini/](./gemini/)
+**Primary Documents:** [docs/research/gemini/](./research/gemini/)
 
 ## Overview
 
@@ -19,23 +19,23 @@ This repository now contains a comprehensive strategic analysis of Model Context
 
 ## Document Structure
 
-All framework analysis documents are located in **[docs/gemini/](./gemini/)**:
+All framework analysis documents are located in **[docs/research/gemini/](./research/gemini/)**:
 
 ### Quick Start Documents
 
-1. **[EXECUTIVE_BRIEF.md](./gemini/EXECUTIVE_BRIEF.md)** - 5-minute executive summary
+1. **[executive-brief.md](./research/gemini/executive-brief.md)** - 5-minute executive summary
    - Bottom-line recommendation: FastMCP 2.0
    - Key findings and decision rationale
    - Next steps and timeline
 
-2. **[ARCHITECTURE_DIAGRAMS.md](./gemini/ARCHITECTURE_DIAGRAMS.md)** - Visual comparisons
+2. **[architecture-diagrams.md](./research/gemini/architecture-diagrams.md)** - Visual comparisons
    - Current custom implementation architecture
    - Proposed FastMCP 2.0 architecture
    - Alternative frameworks (EasyMCP, Official SDK)
    - Feature comparison matrices
    - Session management and authentication flow diagrams
 
-3. **[STRATEGY_COMPARISON.md](./gemini/STRATEGY_COMPARISON.md)** - Side-by-side comparison
+3. **[strategy-comparison.md](./research/gemini/strategy-comparison.md)** - Side-by-side comparison
    - Feature matrix: EasyMCP vs FastMCP 2.0 vs Official SDK
    - Migration effort comparison
    - Cost-benefit analysis
@@ -43,7 +43,7 @@ All framework analysis documents are located in **[docs/gemini/](./gemini/)**:
 
 ### Comprehensive Analysis
 
-4. **[strategicUpdate.md](./gemini/strategicUpdate.md)** - Complete strategic analysis
+4. **[strategic-update.md](./research/gemini/strategic-update.md)** - Complete strategic analysis
    - Full framework capabilities review
    - FastMCP 2.0 vs EasyMCP detailed comparison
    - Architectural implications and migration strategy
@@ -53,19 +53,19 @@ All framework analysis documents are located in **[docs/gemini/](./gemini/)**:
 
 ### Historical Context
 
-5. **[mergeAnalysis.md](./gemini/mergeAnalysis.md)** - Original recommendation
+5. **[merge-analysis.md](./research/gemini/merge-analysis.md)** - Original recommendation
    - Initial EasyMCP recommendation rationale
    - Problem statement and project goals
    - Original phased implementation plan
 
-6. **[MCPResearch.md](./gemini/MCPResearch.md)** - Research objectives
+6. **[mcp-research.md](./research/gemini/mcp-research.md)** - Research objectives
    - Research questions and evaluation criteria
    - Framework candidates identified
    - Expected deliverables
 
 ### Navigation
 
-7. **[README.md](./gemini/README.md)** - Directory guide
+7. **[README.md](./research/gemini/README.md)** - Directory guide
    - Quick navigation by audience (developers, leads, managers)
    - Document reading order recommendations
    - FAQ references
@@ -173,37 +173,37 @@ Comprehensive research revealed:
 ## For Different Audiences
 
 ### 👨‍💼 Decision Makers
-**Start here:** [EXECUTIVE_BRIEF.md](./gemini/EXECUTIVE_BRIEF.md)  
+**Start here:** [executive-brief.md](./research/gemini/executive-brief.md)
 **Key takeaway:** FastMCP 2.0 provides faster path to production despite higher upfront cost
 
 ### 👨‍💻 Developers
-**Start here:** [ARCHITECTURE_DIAGRAMS.md](./gemini/ARCHITECTURE_DIAGRAMS.md)  
+**Start here:** [architecture-diagrams.md](./research/gemini/architecture-diagrams.md)
 **Key takeaway:** Visual comparison of architectures and migration paths
 
 ### 👨‍🔧 Technical Leads
-**Start here:** [strategicUpdate.md](./gemini/strategicUpdate.md)  
+**Start here:** [strategic-update.md](./research/gemini/strategic-update.md)
 **Key takeaway:** Complete architectural analysis and implementation roadmap
 
 ### 👥 Project Managers
-**Start here:** [STRATEGY_COMPARISON.md](./gemini/STRATEGY_COMPARISON.md)  
+**Start here:** [strategy-comparison.md](./research/gemini/strategy-comparison.md)
 **Key takeaway:** Timeline, effort, and cost-benefit comparison
 
 ## Integration with Existing Documentation
 
 This strategic analysis complements existing project documentation:
 
-- **[Development Guide](./development-guide.md)** - Current architecture and development workflow
-- **[Implementation Notes](./implementation-notes.md)** - Backend design decisions
-- **[Deployment Guide](./deployment.md)** - Current deployment procedures
-- **[UI Overview](./ui-overview.md)** - Frontend requirements and features
+- **[Development Guide](./reference/development-guide.md)** - Current architecture and development workflow
+- **[Implementation Notes](./reference/implementation-notes.md)** - Backend design decisions
+- **[Deployment Guide](./reference/deployment.md)** - Current deployment procedures
+- **[UI Overview](./domains/ui/ui-overview-legacy.md)** - Frontend requirements and features
 
 These documents will be updated progressively as the FastMCP 2.0 migration proceeds.
 
 ## Next Steps
 
 1. **Immediate (This Week):**
-   - Review [EXECUTIVE_BRIEF.md](./gemini/EXECUTIVE_BRIEF.md) for decision summary
-   - Review [ARCHITECTURE_DIAGRAMS.md](./gemini/ARCHITECTURE_DIAGRAMS.md) for visual understanding
+   - Review [executive-brief.md](./research/gemini/executive-brief.md) for decision summary
+   - Review [architecture-diagrams.md](./research/gemini/architecture-diagrams.md) for visual understanding
    - Approve proof-of-concept phase
 
 2. **Short-term (Weeks 1-4):**
@@ -223,10 +223,10 @@ These documents will be updated progressively as the FastMCP 2.0 migration proce
 
 ## Questions?
 
-- **"Why not EasyMCP?"** - See [STRATEGY_COMPARISON.md](./gemini/STRATEGY_COMPARISON.md) Decision Criteria section
-- **"What's the migration effort?"** - See [strategicUpdate.md](./gemini/strategicUpdate.md) Phased Implementation Roadmap
-- **"What are the risks?"** - See [strategicUpdate.md](./gemini/strategicUpdate.md) Risk Analysis & Mitigation
-- **"How does this affect current architecture?"** - See [ARCHITECTURE_DIAGRAMS.md](./gemini/ARCHITECTURE_DIAGRAMS.md)
+- **"Why not EasyMCP?"** - See [strategy-comparison.md](./research/gemini/strategy-comparison.md) Decision Criteria section
+- **"What's the migration effort?"** - See [strategic-update.md](./research/gemini/strategic-update.md) Phased Implementation Roadmap
+- **"What are the risks?"** - See [strategic-update.md](./research/gemini/strategic-update.md) Risk Analysis & Mitigation
+- **"How does this affect current architecture?"** - See [architecture-diagrams.md](./research/gemini/architecture-diagrams.md)
 
 ## Conclusion
 
@@ -236,4 +236,4 @@ The comprehensive MCP framework analysis provides a clear path forward for the J
 
 ---
 
-**For complete details, see:** [docs/gemini/README.md](./gemini/README.md)
+**For complete details, see:** [docs/research/gemini/README.md](./research/gemini/README.md)

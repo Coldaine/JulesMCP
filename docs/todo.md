@@ -31,29 +31,29 @@ Supporting materials (breakdowns, specs, links) belong in `docs/tasks/`.
 
 ### Phase 2: Add Metadata Headers ✅ COMPLETE
 - [x] Add metadata to docs/INDEX.md
-- [x] Add metadata to docs/deployment.md
-- [x] Add metadata to docs/development-guide.md
-- [x] Add metadata to docs/implementation-notes.md
-- [x] Add metadata to docs/frontend-backend-reconciliation.md
+- [x] Add metadata to docs/reference/deployment.md
+- [x] Add metadata to docs/reference/development-guide.md
+- [x] Add metadata to docs/reference/implementation-notes.md
+- [x] Add metadata to docs/reference/frontend-backend-reconciliation.md
 - [x] Add metadata to docs/MCP_FRAMEWORK_ANALYSIS.md
-- [x] Add metadata to docs/PRE-INTEGRATION-CHECKLIST.md
-- [x] Add metadata to docs/UI_INTEGRATION_ROADMAP.md
-- [x] Add metadata to docs/INTEGRATION_EXECUTION_PLAN.md
-- [x] Add metadata to docs/REORGANIZATION.md
-- [x] Add metadata to docs/ui-overview.md
-- [x] Add metadata to all docs/ui/*.md files (6 files)
+- [x] Add metadata to docs/reference/pre-integration-checklist.md
+- [x] Add metadata to docs/plans/ui-integration-roadmap.md
+- [x] Add metadata to docs/plans/integration-execution-plan.md
+- [x] Add metadata to docs/research/historical/reorganization.md
+- [x] Add metadata to docs/domains/ui/ui-overview-legacy.md
+- [x] Add metadata to all docs/domains/ui/*.md files (8 files)
 - [x] Add metadata to docs/plans/*.md files
-- [x] Add metadata to docs/gemini/*.md files (7 files)
-- [x] Add metadata to docs/merge/*.md files (2 files)
+- [x] Add metadata to docs/research/gemini/*.md files (7 files)
+- [x] Add metadata to docs/research/historical/merge/*.md files (2 files)
 
 ## Backlog
 
-### Phase 3: Reorganize Structure
-- [ ] Create domain directories
-- [ ] Create domain overview documents with domain_code
-- [ ] Move and rename files per refactoring plan
-- [ ] Update internal links
-- [ ] Create redirect stubs (optional)
+### Phase 3: Reorganize Structure ✅ COMPLETE
+- [x] Create domain directories
+- [x] Create domain overview documents with domain_code
+- [x] Move and rename files per refactoring plan
+- [x] Update internal links
+- [x] Create redirect stubs (optional)
 
 ### Phase 4: Create Domain Documentation
 - [ ] API domain docs (3 files)

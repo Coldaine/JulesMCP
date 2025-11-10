@@ -143,8 +143,8 @@ jules-control-room/
 │   └── ...
 ├── shared/
 ├── docs/
-└── docs/merge/          # This document and others
-    └── mergeplanOne.md
+└── docs/research/historical/merge/  # This document and others
+    └── merge-plan-one.md
 ```
 
 ### Development Workflow

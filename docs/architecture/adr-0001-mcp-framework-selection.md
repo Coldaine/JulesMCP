@@ -12,7 +12,7 @@ last_reviewed: 2025-11-10
 **Date:** October 2025
 **Status:** Accepted
 **Deciders:** Architecture Team
-**Related Documents:** [MCP_FRAMEWORK_ANALYSIS.md](../MCP_FRAMEWORK_ANALYSIS.md), [docs/gemini/](../gemini/)
+**Related Documents:** [MCP_FRAMEWORK_ANALYSIS.md](../MCP_FRAMEWORK_ANALYSIS.md), [docs/research/gemini/](../research/gemini/)
 
 ## Context
 
@@ -224,10 +224,10 @@ The custom implementation has successfully validated the concept, but maintainin
 ## References
 
 - [MCP Framework Strategic Analysis](../MCP_FRAMEWORK_ANALYSIS.md)
-- [Executive Brief](../gemini/EXECUTIVE_BRIEF.md) - 5-minute decision summary
-- [Architecture Diagrams](../gemini/ARCHITECTURE_DIAGRAMS.md) - Visual comparisons
-- [Strategy Comparison](../gemini/STRATEGY_COMPARISON.md) - Feature matrix and cost-benefit
-- [Strategic Update](../gemini/strategicUpdate.md) - Complete analysis with detailed roadmap
+- [Executive Brief](../research/gemini/executive-brief.md) - 5-minute decision summary
+- [Architecture Diagrams](../research/gemini/architecture-diagrams.md) - Visual comparisons
+- [Strategy Comparison](../research/gemini/strategy-comparison.md) - Feature matrix and cost-benefit
+- [Strategic Update](../research/gemini/strategic-update.md) - Complete analysis with detailed roadmap
 - [FastMCP 2.0 Documentation](https://github.com/jlowin/fastmcp) - Official framework docs
 
 ## Decision History

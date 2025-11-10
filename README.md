@@ -10,8 +10,8 @@
 
 Quick links:
 
-- **[Development Guide](./docs/development-guide.md)** - Architecture, setup, and workflow
-- **[Personal Deployment](./docs/deployment.md)** - Running on your local machine or home server
+- **[Development Guide](./docs/reference/development-guide.md)** - Architecture, setup, and workflow
+- **[Personal Deployment](./docs/reference/deployment.md)** - Running on your local machine or home server
 - **[Code Quality](./docs/linting.md)** - Linting and quality standards
 - **[Scope Update](./docs/SCOPE_UPDATE.md)** - Constraints for this solo-use tool
 

@@ -22,16 +22,16 @@ All documentation has been consolidated into the `/docs/` directory with a clear
 | `LINTING.md`                     | `docs/linting-quick-reference.md` | Quick lint commands   |
 | `AUTO_LINTING.md`                | `docs/linting-detailed.md`        | Detailed lint setup   |
 | `CLAUDE.md`                      | `docs/claude-instructions.md`     | AI assistant guidance |
-| `IMPLEMENTATION.md`              | `docs/implementation-notes.md`    | Backend highlights    |
-| `JulesControlRoomUI_Overview.md` | `docs/ui-overview.md`             | UI documentation      |
+| `IMPLEMENTATION.md`              | `docs/reference/implementation-notes.md`    | Backend highlights    |
+| `JulesControlRoomUI_Overview.md` | `docs/domains/ui/ui-overview-legacy.md`             | UI documentation      |
 
 ### New Documents Created
 
 | File                        | Purpose                                                |
 | --------------------------- | ------------------------------------------------------ |
 | `docs/INDEX.md`             | Master documentation index with navigation             |
-| `docs/development-guide.md` | Comprehensive development documentation (consolidated) |
-| `docs/deployment.md`        | Complete deployment guide                              |
+| `docs/reference/development-guide.md` | Comprehensive development documentation (consolidated) |
+| `docs/reference/deployment.md`        | Complete deployment guide                              |
 | `docs/linting.md`           | Code quality and linting guide                         |
 
 ## Documentation Structure
@@ -121,12 +121,12 @@ Combined multiple overlapping documents:
 
 1. README.md (overview)
 2. docs/INDEX.md (navigation)
-3. docs/development-guide.md (deep dive)
+3. docs/reference/development-guide.md (deep dive)
 
 **Deploying:**
 
 1. README.md (quick start)
-2. docs/deployment.md (production guide)
+2. docs/reference/deployment.md (production guide)
 
 ## README Updates
 
@@ -168,11 +168,11 @@ The main README now:
 | ------------------------ | ------------------------------------------------------------- |
 | Claude AI context        | `docs/claude-instructions.md`                                 |
 | Linting commands         | `docs/linting-quick-reference.md` or `docs/linting.md`        |
-| Implementation details   | `docs/implementation-notes.md` or `docs/development-guide.md` |
-| UI architecture          | `docs/ui-overview.md`                                         |
-| API usage guidance       | `docs/development-guide.md` (API section)                     |
-| Deployment steps         | `docs/deployment.md`                                          |
-| Setup instructions       | `docs/development-guide.md`                                   |
+| Implementation details   | `docs/reference/implementation-notes.md` or `docs/reference/development-guide.md` |
+| UI architecture          | `docs/domains/ui/ui-overview-legacy.md`                                         |
+| API usage guidance       | `docs/reference/development-guide.md` (API section)                     |
+| Deployment steps         | `docs/reference/deployment.md`                                          |
+| Setup instructions       | `docs/reference/development-guide.md`                                   |
 
 ### Broken Links
 
@@ -180,7 +180,7 @@ All internal links have been updated. External references may need updating:
 
 - `CLAUDE.md` → `docs/claude-instructions.md`
 - `LINTING.md` → `docs/linting.md`
-- `IMPLEMENTATION.md` → `docs/implementation-notes.md`
+- `IMPLEMENTATION.md` → `docs/reference/implementation-notes.md`
 
 ## Next Steps
 

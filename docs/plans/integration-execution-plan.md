@@ -43,15 +43,15 @@ This document provides a detailed execution plan for integrating the Jules Contr
 
 **Before starting ANY implementation work, you MUST read:**
 
-1. **`docs/UI_INTEGRATION_ROADMAP.md`** - Complete integration strategy, type mismatches, risk assessment
-2. **`docs/frontend-backend-reconciliation.md`** - Day 1 integration plan, known gaps, acceptance criteria
+1. **`docs/plans/ui-integration-roadmap.md`** - Complete integration strategy, type mismatches, risk assessment
+2. **`docs/reference/frontend-backend-reconciliation.md`** - Day 1 integration plan, known gaps, acceptance criteria
 3. **`shared/types.ts`** - Backend type definitions
 4. **`E:\_projectsGithub\Julescontrolroomui\src\lib\types.ts`** - UI type definitions
 
 **Reference Documentation:**
 - `docs/MCP_FRAMEWORK_ANALYSIS.md` - Future MCP strategy (Phase 3, deferred)
 - `CLAUDE.md` - Backend architecture and commands
-- `docs/development-guide.md` - Backend development workflow
+- `docs/reference/development-guide.md` - Backend development workflow
 
 ### Repository Locations
 
@@ -1422,8 +1422,8 @@ Use this checklist to track overall progress:
 ## 📚 Additional Resources
 
 **Key Documentation:**
-- `docs/UI_INTEGRATION_ROADMAP.md` - Strategic overview
-- `docs/frontend-backend-reconciliation.md` - Integration details
+- `docs/plans/ui-integration-roadmap.md` - Strategic overview
+- `docs/reference/frontend-backend-reconciliation.md` - Integration details
 - `docs/MCP_FRAMEWORK_ANALYSIS.md` - Future MCP strategy
 - `CLAUDE.md` - Backend architecture
 

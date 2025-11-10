@@ -19,7 +19,7 @@ last_reviewed: 2025-11-10
 
 ## 📋 Overview
 
-This checklist must be completed before beginning Phase 2A (Environment Setup) of the [Integration Execution Plan](./INTEGRATION_EXECUTION_PLAN.md).
+This checklist must be completed before beginning Phase 2A (Environment Setup) of the [Integration Execution Plan](../plans/integration-execution-plan.md).
 
 **Estimated Time:** 30-60 minutes
 
@@ -43,10 +43,10 @@ This checklist must be completed before beginning Phase 2A (Environment Setup) o
   ```
 
 - [ ] **All Documentation Present**
-  - [ ] `docs/INTEGRATION_EXECUTION_PLAN.md` exists (updated 2025-11-10)
-  - [ ] `docs/UI_INTEGRATION_ROADMAP.md` exists
-  - [ ] `docs/frontend-backend-reconciliation.md` exists
-  - [ ] `docs/ui/` folder exists with 6 files (README.md, ARCHITECTURE.md, etc.)
+  - [ ] `docs/plans/integration-execution-plan.md` exists (updated 2025-11-10)
+  - [ ] `docs/plans/ui-integration-roadmap.md` exists
+  - [ ] `docs/reference/frontend-backend-reconciliation.md` exists
+  - [ ] `docs/domains/ui/` folder exists with all UI documentation
   - [ ] `docs/INDEX.md` updated with UI integration section
 
 - [ ] **Backend Dependencies**
@@ -142,12 +142,12 @@ This checklist must be completed before beginning Phase 2A (Environment Setup) o
 
 ### Required Reading (MUST READ BEFORE STARTING)
 
-- [ ] **[INTEGRATION_EXECUTION_PLAN.md](./INTEGRATION_EXECUTION_PLAN.md)** (45 min read)
+- [ ] **[INTEGRATION_EXECUTION_PLAN.md](../plans/integration-execution-plan.md)** (45 min read)
   - Complete 23-step execution guide
   - Phase 0: Environment Validation added
   - Critical corrections for Windows, repository structure, type adapter
 
-- [ ] **[UI_INTEGRATION_ROADMAP.md](./UI_INTEGRATION_ROADMAP.md)** (20 min read)
+- [ ] **[UI_INTEGRATION_ROADMAP.md](../plans/ui-integration-roadmap.md)** (20 min read)
   - Strategic overview of integration phases
   - Timeline estimates (20-36 hours)
   - Type mismatch analysis
@@ -160,13 +160,13 @@ This checklist must be completed before beginning Phase 2A (Environment Setup) o
 
 ### Reference Documentation (Read as Needed)
 
-- [ ] **[docs/ui/README.md](./ui/README.md)** - Index of UI documentation
-- [ ] **[docs/ui/BACKEND_BRIEF.md](./ui/BACKEND_BRIEF.md)** - Executive summary for backend teams
-- [ ] **[docs/ui/ARCHITECTURE.md](./ui/ARCHITECTURE.md)** - System architecture and data flow
-- [ ] **[docs/ui/INTEGRATION_GUIDE.md](./ui/INTEGRATION_GUIDE.md)** - Step-by-step API integration
-- [ ] **[docs/ui/JULES_API_AUDIT.md](./ui/JULES_API_AUDIT.md)** - Feature compatibility matrix
-- [ ] **[CLAUDE.md](../CLAUDE.md)** - Backend architecture and commands
-- [ ] **[docs/development-guide.md](./development-guide.md)** - Backend development workflow
+- [ ] **[docs/domains/ui/README.md](../domains/ui/README.md)** - Index of UI documentation
+- [ ] **[docs/domains/ui/ui-backend-brief.md](../domains/ui/ui-backend-brief.md)** - Executive summary for backend teams
+- [ ] **[docs/domains/ui/ui-architecture.md](../domains/ui/ui-architecture.md)** - System architecture and data flow
+- [ ] **[docs/domains/ui/ui-integration-guide.md](../domains/ui/ui-integration-guide.md)** - Step-by-step API integration
+- [ ] **[docs/domains/ui/ui-jules-api-audit.md](../domains/ui/ui-jules-api-audit.md)** - Feature compatibility matrix
+- [ ] **[CLAUDE.md](../../CLAUDE.md)** - Backend architecture and commands
+- [ ] **[docs/reference/development-guide.md](./development-guide.md)** - Backend development workflow
 
 ---
 
