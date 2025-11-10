@@ -128,6 +128,7 @@ jules-control-room/
 
 ### Architecture Decision Records (ADRs)
 - [ADR-0001: MCP Framework Selection](architecture/adr-0001-mcp-framework-selection.md) - FastMCP 2.0 chosen for MCP implementation
+- [ADR-0002: Centralized LLM Router Pattern](architecture/adr-0002-centralized-llm-router.md) - Centralized router for all LLM API requests
 
 See [`docs/architecture/roadmap.md`](architecture/roadmap.md) for future architecture plans.
 

@@ -204,6 +204,11 @@ last_reviewed: 2025-11-10
 
 ## Decision Log
 
+### 2025-11: Centralized LLM Router Pattern
+**Decision:** Implement centralized router service for all LLM API requests
+**Rationale:** Eliminate configuration duplication, centralized observability, cost tracking
+**Status:** Documented in [ADR-0002](adr-0002-centralized-llm-router.md)
+
 ### 2025-11: Documentation Playbook Adoption
 **Decision:** Adopt Master Documentation Playbook for standardization
 **Rationale:** Improve discoverability, enforce quality, enable CI validation
