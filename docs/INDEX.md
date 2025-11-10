@@ -24,6 +24,7 @@ Complete documentation for the Jules Control Room Backend - a **personal, single
 
 ### Implementation Details
 
+- **[MCP Framework Analysis](./MCP_FRAMEWORK_ANALYSIS.md)** - Strategic framework selection summary
 - **[Implementation Notes](./implementation-notes.md)** - Backend highlights and extensibility
 - **[Claude Instructions](./claude-instructions.md)** - AI assistant guidance for this codebase
 
@@ -41,6 +42,10 @@ Complete documentation for the Jules Control Room Backend - a **personal, single
 
 ### Research
 
+- **[Executive Brief](./gemini/EXECUTIVE_BRIEF.md)** - Quick framework decision summary (start here!)
+- **[Architecture Diagrams](./gemini/ARCHITECTURE_DIAGRAMS.md)** - Visual comparison of framework architectures
+- **[Strategy Comparison](./gemini/STRATEGY_COMPARISON.md)** - EasyMCP vs FastMCP 2.0 quick reference
+- **[Strategic Update](./gemini/strategicUpdate.md)** - FastMCP 2.0 framework analysis and revised strategy
 - **[MCP Research](./gemini/MCPResearch.md)** - Model Context Protocol research
 - **[Merge Analysis](./gemini/mergeAnalysis.md)** - Technical merge analysis
 
@@ -61,6 +66,7 @@ docs/
 ├── linting-quick-reference.md      # Quick lint commands
 ├── linting-detailed.md             # Detailed lint setup
 ├── implementation-notes.md         # Backend implementation
+├── MCP_FRAMEWORK_ANALYSIS.md       # Framework selection summary
 ├── claude-instructions.md          # AI assistant guide
 ├── ui-overview.md                  # UI documentation
 ├── plan/
@@ -69,6 +75,11 @@ docs/
 │   ├── mergeplanOne.md            # Merge strategy
 │   └── functionalityLoss.md      # Feature analysis
 ├── gemini/
+│   ├── README.md                  # This directory guide
+│   ├── EXECUTIVE_BRIEF.md         # Quick framework decision
+│   ├── ARCHITECTURE_DIAGRAMS.md   # Visual comparisons
+│   ├── STRATEGY_COMPARISON.md     # Framework comparison
+│   ├── strategicUpdate.md         # FastMCP 2.0 strategy update
 │   ├── MCPResearch.md             # MCP research
 │   └── mergeAnalysis.md           # Merge analysis
 └── reviews/
