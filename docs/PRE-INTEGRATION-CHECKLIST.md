@@ -1,3 +1,12 @@
+---
+doc_type: reference
+subsystem: ui
+version: 1.0.0
+status: approved
+owners: UI Integration Team
+last_reviewed: 2025-11-10
+---
+
 # Pre-Integration Checklist
 
 **Purpose:** Ensure all prerequisites are met before starting UI integration

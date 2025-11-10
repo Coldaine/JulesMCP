@@ -1,3 +1,12 @@
+---
+doc_type: index
+subsystem: general
+version: 1.0.0
+status: approved
+owners: Research Team
+last_reviewed: 2025-11-10
+---
+
 # MCP Framework Research & Strategic Analysis
 
 This directory contains comprehensive research and strategic analysis for selecting a Model Context Protocol (MCP) framework for the Jules Control Room project.

@@ -6,9 +6,10 @@ status: approved
 owners: AI Assistant Team
 last_reviewed: 2025-11-10
 ---
-# CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository. It is synchronized with [docs/agents.md](docs/agents.md) and adheres to the [Master Documentation Playbook](docs/playbooks/organizational/documentation_playbook.md) and [Documentation Standards](docs/standards.md).
+# AI Assistant Guidance (agents.md)
+
+This file provides guidance to AI assistants when working with code in this repository. It is synchronized with [root CLAUDE.md](../claude.md) and adheres to the [Master Documentation Playbook](playbooks/organizational/documentation_playbook.md) and [Documentation Standards](standards.md).
 
 ## Project Overview
 
@@ -189,7 +190,7 @@ npx vitest run backend/src/__tests__/routes.test.ts
 2. Route handler validates body with Zod
 3. `julesClient` makes external API call with retry logic
 4. Success returns JSON, failure caught by route error handler
-4. Structured logs emitted with request ID correlation
+5. Structured logs emitted with request ID correlation
 
 **WebSocket flow**:
 
@@ -221,3 +222,82 @@ npx vitest run backend/src/__tests__/routes.test.ts
 - WebSocket broadcasts logged with client count and payload size
 - Errors logged with full stack traces (secrets filtered)
 - No request bodies or Authorization headers in logs
+
+## Documentation Standards
+
+**All AI assistants working on this repository MUST:**
+
+1. **Follow the Master Documentation Playbook** at `docs/playbooks/organizational/documentation_playbook.md`
+2. **Add required metadata headers** to all new markdown files (see `docs/standards.md`)
+3. **Update `docs/todo.md`** when adding, completing, or modifying tasks
+4. **Use domain codes** when creating domain documentation: api, ws, auth, ji, per, ui
+5. **Keep documentation synchronized**: CLAUDE.md ↔ docs/agents.md
+
+## Workspace Map
+
+### Repository Structure
+
+```
+E:\_projectsGithub\JulesMCP/
+├── backend/                  # Express server
+│   ├── src/                  # TypeScript source
+│   │   ├── server.ts         # Main app
+│   │   ├── routes/           # API routes
+│   │   ├── auth.ts           # Auth middleware
+│   │   ├── security.ts       # Security middleware
+│   │   ├── julesClient.ts    # Jules API client
+│   │   ├── ws.ts             # WebSocket server
+│   │   ├── persistence.ts    # SQLite storage
+│   │   ├── notifier.ts       # Webhook notifications
+│   │   └── logging.ts        # Structured logging
+│   ├── public/               # Static files
+│   └── __tests__/            # Vitest tests
+├── shared/                   # Shared TypeScript types
+│   └── types.ts              # DTOs
+├── docs/                     # Documentation (canonical)
+│   ├── architecture.md       # System architecture
+│   ├── architecture/
+│   │   └── roadmap.md        # Project roadmap
+│   ├── standards.md          # Documentation standards
+│   ├── agents.md             # This file
+│   ├── todo.md               # Task tracking
+│   ├── playbooks/            # Organizational playbooks
+│   ├── plans/                # One-off plans
+│   ├── reference/            # Reference documentation
+│   ├── research/             # Research and historical docs
+│   └── INDEX.md              # Documentation navigation
+├── CLAUDE.md                 # Root assistant guidance (mirrors docs/agents.md)
+├── README.md                 # Project overview
+├── package.json              # NPM workspace
+└── tsconfig.json             # TypeScript config
+```
+
+### Key Paths
+
+- **Tests**: `backend/src/__tests__/*.test.ts`
+- **API Routes**: `backend/src/routes/sessions.ts`
+- **Types**: `shared/types.ts`
+- **Documentation**: `docs/`
+- **Config**: `backend/.env`, `backend/vitest.config.ts`, `tsconfig.json`
+
+## Feature Flags & Environment Variables
+
+See [Environment Variables](#environment-variables) section above.
+
+**Optional Features:**
+- **Persistence**: Set `PERSIST=1` to enable SQLite session history
+- **Webhooks**: Set `NOTIFY_WEBHOOK=https://...` to enable webhook notifications
+- **LAN Exposure**: Set `ALLOWLIST=192.168.1.0/24` to allow home network access
+
+## Related Documentation
+
+- **[Architecture Overview](architecture.md)** - System design and components
+- **[Development Guide](reference/development-guide.md)** - Setup and workflow
+- **[Documentation Standards](standards.md)** - Documentation requirements
+- **[TODO](todo.md)** - Current tasks and backlog
+- **[Master Documentation Playbook](playbooks/organizational/documentation_playbook.md)** - Documentation rules
+
+---
+
+**Last Updated:** 2025-11-10
+**Synchronized with:** [CLAUDE.md](../claude.md)

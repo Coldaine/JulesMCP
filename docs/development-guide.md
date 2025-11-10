@@ -1,3 +1,12 @@
+---
+doc_type: reference
+subsystem: general
+version: 1.0.0
+status: approved
+owners: Backend Team
+last_reviewed: 2025-11-10
+---
+
 # Development Guide
 
 This guide covers setup, architecture, testing, and development workflows for the Jules Control Room Backend.

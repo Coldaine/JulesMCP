@@ -1,3 +1,12 @@
+---
+doc_type: reference
+subsystem: ui
+version: 1.0.0
+status: approved
+owners: Integration Team
+last_reviewed: 2025-11-10
+---
+
 # Frontend ↔ Backend Reconciliation and MCP Decision (Oct 2025)
 
 This note aligns the current frontend prototype with the existing backend and answers whether a rewrite to an MCP framework is required.

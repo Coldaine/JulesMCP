@@ -1,3 +1,12 @@
+---
+doc_type: index
+subsystem: general
+version: 1.0.0
+status: approved
+owners: Documentation Team
+last_reviewed: 2025-11-10
+---
+
 # Documentation Index
 
 Complete documentation for the Jules Control Room Backend - a **personal, single-user tool** for managing Jules AI coding sessions.

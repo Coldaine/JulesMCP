@@ -1,3 +1,12 @@
+---
+doc_type: research
+subsystem: general
+version: 1.0.0
+status: approved
+owners: Research Team
+last_reviewed: 2025-11-10
+---
+
 # Strategy Comparison: EasyMCP vs FastMCP 2.0
 
 ## Quick Reference Guide

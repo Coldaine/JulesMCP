@@ -1,3 +1,12 @@
+---
+doc_type: research
+subsystem: general
+version: 1.0.0
+status: approved
+owners: Documentation Team
+last_reviewed: 2025-11-10
+---
+
 # Documentation Organization Summary
 
 This document summarizes the documentation reorganization completed on October 19, 2025.

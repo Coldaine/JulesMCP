@@ -134,3 +134,33 @@ See the [Documentation Index](./docs/INDEX.md) for:
 - Deployment guides
 - Testing strategies
 - Solo-tool scope notes (no public examples provided)
+
+## Contributing
+
+We welcome contributions to the Jules Control Room Backend! Please refer to our [Documentation Standards](./docs/standards.md) for guidelines on code quality and documentation.
+
+### How to Contribute
+
+1.  **Check the To-Do List**: See `docs/todo.md` for current tasks and priorities.
+2.  **Fork the Repository**: Create your own fork on GitHub.
+3.  **Create a Feature Branch**: Branch off `main` for your changes.
+4.  **Develop and Test**: Implement your changes and ensure all tests pass (`npm run test`).
+5.  **Lint and Typecheck**: Run `npm run lint:fix` and `npm run typecheck`.
+6.  **Submit a Pull Request**: Follow the guidelines in `docs/playbooks/organizational/pr_playbook.md`.
+
+### Code Quality Standards
+
+All code must pass:
+
+- ✅ Linting: `npm run lint`
+- ✅ Type checking: `npm run typecheck`
+- ✅ Tests: `npm run test`
+
+Auto-fix is enabled for linting (see [Linting Guide](./docs/linting.md)).
+
+### Documentation Standards
+
+- Keep README minimal (overview + quick start only)
+- Detailed docs go in `/docs/`
+- Use clear headings and concise explanations
+- Link between related documents

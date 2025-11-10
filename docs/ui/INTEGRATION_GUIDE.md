@@ -1,3 +1,12 @@
+---
+doc_type: reference
+subsystem: ui
+version: 1.0.0
+status: approved
+owners: UI Team
+last_reviewed: 2025-11-10
+---
+
 # Jules API Integration Guide
 
 ## ✅ What This Prototype Does Right Now

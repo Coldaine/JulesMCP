@@ -1,3 +1,12 @@
+---
+doc_type: plan
+subsystem: ui
+version: 1.0.0
+status: in_review
+owners: UI Integration Team
+last_reviewed: 2025-11-10
+---
+
 # Jules Control Room - UI Integration Execution Plan
 
 **Status:** Phase 0 & Phase 1 Complete - Foundation Built ✅

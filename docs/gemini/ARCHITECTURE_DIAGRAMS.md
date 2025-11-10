@@ -1,3 +1,12 @@
+---
+doc_type: research
+subsystem: general
+version: 1.0.0
+status: approved
+owners: Research Team
+last_reviewed: 2025-11-10
+---
+
 # MCP Framework Architecture Diagrams
 
 ## Current Custom Implementation

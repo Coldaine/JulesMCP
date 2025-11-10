@@ -1,3 +1,12 @@
+---
+doc_type: reference
+subsystem: general
+version: 1.0.0
+status: approved
+owners: Backend Team
+last_reviewed: 2025-11-10
+---
+
 # Personal Deployment Guide
 
 This guide covers running the Jules Control Room Backend on your local machine or home server.

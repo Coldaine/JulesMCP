@@ -1,3 +1,12 @@
+---
+doc_type: architecture
+subsystem: general
+version: 1.0.0
+status: approved
+owners: Architecture Team
+last_reviewed: 2025-11-10
+---
+
 # MCP Framework Strategic Analysis Summary
 
 **Last Updated:** October 2025  

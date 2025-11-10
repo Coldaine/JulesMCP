@@ -1,3 +1,12 @@
+---
+doc_type: index
+subsystem: ui
+version: 1.0.0
+status: approved
+owners: UI Team
+last_reviewed: 2025-11-10
+---
+
 # Jules Control Room UI Documentation
 
 This folder contains documentation from the UI repository (`Julescontrolroomui`), copied here for reference during backend integration.

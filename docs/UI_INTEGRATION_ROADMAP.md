@@ -1,3 +1,12 @@
+---
+doc_type: plan
+subsystem: ui
+version: 1.0.0
+status: in_review
+owners: UI Integration Team
+last_reviewed: 2025-11-10
+---
+
 # UI Integration Roadmap
 
 **Status:** Phase 1 Complete - Foundation Built ✅
