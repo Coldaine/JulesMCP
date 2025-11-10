@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This file provides guidance to AI agents when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
 
@@ -31,7 +31,8 @@ cp backend/.env.example backend/.env
 npm run dev        # Start server with hot reload (nodemon)
 npm run build      # Compile TypeScript to backend/dist
 npm run start      # Run compiled server
-npm run lint       # ESLint check
+npm run lint       # ESLint check (strict, max-warnings=0)
+npm run lint:fix   # Auto-fix all linting issues
 npm run typecheck  # TypeScript strict checking
 npm run test       # Run Vitest test suite
 npm run test:watch # Run tests in watch mode
@@ -135,6 +136,9 @@ Located in `backend/.env`:
 - `julesClient.test.ts` - Retry/backoff with nock mocks
 - `routes.test.ts` - Integration flow (create → approve → message → activities)
 - `ws.test.ts` - WebSocket heartbeats and delta broadcasts
+- `logging.test.ts` - Structured logging and request IDs
+- `persistence.test.ts` - SQLite storage operations
+- `simple.test.ts` - Basic sanity checks
 
 **Configuration**: `backend/vitest.config.ts`
 
