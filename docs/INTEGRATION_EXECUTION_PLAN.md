@@ -84,59 +84,133 @@ Before beginning each phase below, you MUST:
 
 ## Phase 2: Implementation (Steps 8-23)
 
+### 🔍 Phase 0: Environment Validation (30 minutes)
+
+**Before starting integration work, verify your environment is ready.**
+
+**Objective:** Catch configuration issues early before they block integration work.
+
+#### Pre-Flight Checklist
+
+Run these commands to verify your setup:
+
+**1. Node.js Version:**
+```bash
+node --version  # Should be v20.x or higher
+npm --version   # Should be 9.x or higher
+```
+
+**2. Repository Access:**
+```bash
+# Backend repo
+cd E:\_projectsGithub\JulesMCP
+git status  # Should show clean or tracked changes
+
+# UI repo
+cd E:\_projectsGithub\Julescontrolroomui
+git status  # Should show separate repository
+```
+
+**3. Install All Dependencies:**
+```bash
+# Backend
+cd E:\_projectsGithub\JulesMCP
+npm install  # Installs both backend and shared workspace deps
+
+# UI
+cd E:\_projectsGithub\Julescontrolroomui
+npm install  # May take 2-3 minutes, ~300MB
+```
+
+**4. Create Environment Files:**
+
+**Backend:**
+```bash
+cd E:\_projectsGithub\JulesMCP\backend
+copy .env.example .env
+# Edit .env and set:
+# JULES_API_KEY=<your_actual_key>
+# LOCAL_TOKEN=<generate_random_32_char_string>
+```
+
+**UI:**
+```bash
+cd E:\_projectsGithub\Julescontrolroomui
+# Create .env.local
+echo VITE_API_BASE=http://localhost:3001/api > .env.local
+echo VITE_LOCAL_TOKEN=<same_token_as_backend> >> .env.local
+```
+
+**⚠️ CRITICAL:** Tokens MUST match between backend/.env and UI/.env.local!
+
+**5. Verify Backend Starts:**
+```bash
+cd E:\_projectsGithub\JulesMCP
+npm run dev
+# Should see: "Server listening on port 3001"
+# Check http://localhost:3001/healthz should return {"status":"ok"}
+# Press Ctrl+C to stop
+```
+
+**6. Verify UI Starts (Mock Mode):**
+```bash
+cd E:\_projectsGithub\Julescontrolroomui
+npm run dev
+# Should see: "Local: http://localhost:3000"
+# Open browser, should see Jules Control Room with mock data
+# Press Ctrl+C to stop
+```
+
+**7. Run Backend Tests:**
+```bash
+cd E:\_projectsGithub\JulesMCP
+npm run test
+# All tests should pass
+# If any fail, investigate before proceeding
+```
+
+**✅ Phase 0 Complete When:**
+- [ ] Node.js 20+ installed
+- [ ] Both repositories accessible
+- [ ] All dependencies installed (node_modules present)
+- [ ] Environment files created with valid tokens
+- [ ] Backend starts without errors
+- [ ] UI starts and shows mock data
+- [ ] Backend tests pass
+
+**If ANY of these fail, STOP and fix them before continuing to Phase 2A.**
+
+---
+
 ### 🏗️ Phase 2A: Environment Setup (Steps 8-12)
 
 **Objective:** Prepare development environment for integration work
 
 **Estimated Time:** 3-4 hours
 
-#### Step 8: Set Up UI Repository Structure
+#### Step 8: Verify Repository Structure
 
-**Context:** We need to decide how to integrate the two repositories.
+**Current Reality:**
+- Backend: `E:\_projectsGithub\JulesMCP` (this repository)
+- UI: `E:\_projectsGithub\Julescontrolroomui` (separate git repository)
+- Empty folder: `JulesMCP/Julescontrolroomui/` exists but is not used
 
 **🧠 Think Deeply:**
-- What's the best way to connect these repos?
-- Git submodule vs directory structure vs monorepo?
-- How will this affect build pipelines and deployments?
+- The UI is a separate, complete git repository with its own commit history
+- The empty `Julescontrolroomui/` folder in the backend repo should be deleted or converted to a submodule
+- For rapid development, we'll reference UI by absolute path and copy builds to `backend/public/`
 
-**Options:**
+**🎯 Decision Made:** Use directory reference during development, copy builds to `backend/public/`
 
-**Option A: Git Submodule** (Recommended for production)
-```bash
-cd E:\_projectsGithub\JulesMCP
-git submodule add E:\_projectsGithub\Julescontrolroomui frontend
-git submodule update --init --recursive
-```
-
-**Pros:**
-- Clean git history
-- Easy to update UI independently
-- Standard monorepo pattern
-
-**Cons:**
-- More git complexity
-- Submodule management overhead
-
-**Option B: Directory Reference** (Recommended for rapid development)
-```bash
-# No action needed - reference UI repo by absolute path
-# Build scripts will copy from UI repo to backend/public/
-```
-
-**Pros:**
-- Simple, no git complexity
-- Can convert to submodule later
-- Faster iteration during development
-
-**Cons:**
-- Manual path management
-- Not standard structure
-
-**🎯 Decision Point:** Choose based on your workflow preference. For rapid development, start with Option B. Convert to Option A before production deployment.
+**Actions Required:**
+1. Verify both repos exist at the specified paths
+2. Delete or ignore the empty `Julescontrolroomui/` folder in backend repo
+3. Build scripts will copy from `E:\_projectsGithub\Julescontrolroomui\build\` to `backend\public\`
 
 **Validation:**
-- [ ] Can navigate to UI repository from backend project?
-- [ ] Understand the path relationships between repos?
+- [ ] UI repository accessible at `E:\_projectsGithub\Julescontrolroomui`
+- [ ] Backend repository at `E:\_projectsGithub\JulesMCP`
+- [ ] Understand that these are separate git repositories
 
 ---
 
@@ -178,16 +252,22 @@ npm install
 
 #### Step 10: Create Type Adapter Layer
 
-**Context:** The UI and backend have incompatible type systems. We need a conversion layer.
+**⚠️ CRITICAL STATUS CHECK:**
+- File `backend-adapter.ts` EXISTS but is EMPTY (only 2 lines)
+- File `jules-api-types.ts` EXISTS with conversion functions BUT assumes Jules API v1alpha format
+- API client currently imports from `jules-api-types.ts` which is INCORRECT for backend integration
 
 **🧠 Think Deeply:**
-- Review the type mismatch analysis in `UI_INTEGRATION_ROADMAP.md` section "Challenge 1"
-- Understand WHY each conversion is needed
-- Consider edge cases: null values, missing fields, enum mismatches
+- The backend returns `JulesSession` format (see `shared/types.ts`)
+- This is DIFFERENT from Jules API v1alpha format
+- We need a NEW adapter specifically for backend <-> UI conversion
+- Review type mismatch analysis in `UI_INTEGRATION_ROADMAP.md` section "Challenge 1"
 
 **File to Create:** `E:\_projectsGithub\Julescontrolroomui\src\lib\backend-adapter.ts`
 
 **🤖 SPAWN SUB-AGENT CHECKPOINT:**
+
+⚠️ **VERIFY FIRST:** Check if `backend-adapter.ts` is still empty before spawning agent.
 
 If the backend-adapter.ts file doesn't exist or is incomplete, spawn a sub-agent with this task:
 
@@ -220,6 +300,39 @@ Key conversion logic:
 Include comprehensive error handling and JSDoc comments.
 
 Set thoroughness to 'very thorough' - this is critical infrastructure."
+```
+
+**Backend Type Reference (from `shared/types.ts`):**
+```typescript
+// Backend format (what API returns)
+JulesSession {
+  id: string
+  repo: string
+  branch: string
+  planStatus: 'pending' | 'in_progress' | 'succeeded' | 'failed'
+  approval: 'pending' | 'approved' | 'rejected'
+  summary?: string
+  createdAt: string (ISO)
+  updatedAt: string (ISO)
+  participants: Participant[]
+  metadata?: Record<string, unknown>
+}
+```
+
+**UI Type Reference (from `src/lib/types.ts`):**
+```typescript
+// UI format (what components expect)
+Session {
+  id: string
+  repo: string
+  branch: string
+  status: SessionStatus  // COMBINED status from planStatus + approval
+  prompt: string         // Maps from summary
+  createdAt: string
+  updatedAt: string
+  requirePlanApproval?: boolean  // From metadata
+  plan?: string                   // From metadata or activities
+}
 ```
 
 **Manual Implementation Alternative:**
@@ -325,13 +438,32 @@ export default defineConfig({
 
 #### Step 12: Set Up Development Proxy
 
-**Context:** During development, UI runs on port 3000, backend on port 3001. We need Vite to proxy API calls.
+**Current Status Check:**
+✅ `vite.config.ts` EXISTS and has basic configuration
+✅ Build output configured to `build/` directory
+❌ NO proxy configuration present (needs to be added)
+
+**🧠 Think Deeply:**
+- During development, UI runs on port 3000, backend on port 3001
+- Without proxy, CORS will block API calls from UI to backend
+- Vite's proxy rewrites `/api` and `/ws` requests to backend server
+- `changeOrigin: true` is CRITICAL for WebSocket upgrades
+
+**Best Practices (2024):**
+Based on Vite documentation and community feedback:
+1. Always set `ws: true` for WebSocket proxy routes
+2. Use `changeOrigin: true` to modify origin header
+3. Separate proxy configs for HTTP and WebSocket endpoints
+4. Set `secure: false` for local development with self-signed certs
 
 **File to Modify:** `E:\_projectsGithub\Julescontrolroomui\vite.config.ts`
 
-**Add Server Configuration:**
-
+**Add This Server Configuration:**
 ```typescript
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react-swc';
+import path from 'path';
+
 export default defineConfig({
   plugins: [react()],
   resolve: {
@@ -349,8 +481,9 @@ export default defineConfig({
       },
       '/ws': {
         target: 'ws://localhost:3001',
-        ws: true,
+        ws: true,              // CRITICAL: Enable WebSocket proxying
         changeOrigin: true,
+        secure: false,
       },
     },
   },
@@ -362,10 +495,11 @@ export default defineConfig({
 });
 ```
 
-**🧠 Think Deeply:**
-- Why do we need `changeOrigin: true`?
-- What happens if backend isn't running when UI starts?
-- How will WebSocket proxy work differently than HTTP proxy?
+**⚠️ Common WebSocket Proxy Issues (2024):**
+- Missing `ws: true` flag → WebSocket upgrade fails
+- Wrong protocol in target (use `ws://` not `http://`)
+- Firewall blocking WebSocket connections
+- HMR conflicts with WebSocket proxy (Vite 3+ handles this better)
 
 **Create Environment File:**
 
@@ -415,6 +549,70 @@ Expected: Requests to `/api/*` should show in Network tab going to localhost:300
 **Estimated Time:** 4-6 hours
 
 #### Step 13: Wire GET /api/sessions to UI
+
+**⚠️ PREREQUISITES CHECK - DO THESE FIRST:**
+
+Before starting this step, verify:
+
+1. **Backend Dependencies Installed:**
+   ```bash
+   cd E:\_projectsGithub\JulesMCP
+   # Check if node_modules exists
+   ls node_modules  # Should NOT be empty
+   # If empty, run:
+   npm install
+   ```
+
+2. **UI Dependencies Installed:**
+   ```bash
+   cd E:\_projectsGithub\Julescontrolroomui
+   # Check if node_modules exists
+   ls node_modules  # Should NOT be empty
+   # If empty, run:
+   npm install
+   ```
+
+3. **Backend Environment Configured:**
+   ```bash
+   cd E:\_projectsGithub\JulesMCP\backend
+   # Check if .env exists
+   cat .env
+   # Should contain:
+   # JULES_API_KEY=<your_key>
+   # LOCAL_TOKEN=<random_secure_token>
+   # If missing, copy from .env.example and fill in values
+   ```
+
+4. **UI Environment Configured:**
+   ```bash
+   cd E:\_projectsGithub\Julescontrolroomui
+   # Check if .env.local exists
+   cat .env.local
+   # Should contain:
+   # VITE_API_BASE=http://localhost:3001/api
+   # VITE_LOCAL_TOKEN=<same_as_backend_LOCAL_TOKEN>
+   # If missing, create it
+   ```
+
+5. **Type Adapter Implemented:**
+   ```bash
+   cd E:\_projectsGithub\Julescontrolroomui
+   # Check backend-adapter.ts is NOT empty
+   wc -l src/lib/backend-adapter.ts
+   # Should have 200+ lines, not just 2
+   ```
+
+6. **Vite Proxy Configured:**
+   ```bash
+   cd E:\_projectsGithub\Julescontrolroomui
+   # Check vite.config.ts has server.proxy section
+   grep -A 10 "server:" vite.config.ts
+   # Should show proxy configuration
+   ```
+
+**If ANY of the above are missing, STOP and complete Steps 8-12 first.**
+
+---
 
 **Context:** This is the FIRST real integration point. If this works, everything else will follow.
 
@@ -884,17 +1082,85 @@ Set thoroughness to 'very thorough' - WebSocket is critical for real-time UX."
 
 #### Steps 19-23: Build Automation & Production
 
-**Step 19: Build Script**
+**Step 19: Build Script Automation**
 
-Add to root `package.json`:
+**Context:** Automate UI build and deployment to backend/public/
+
+**Platform Consideration:** This is a Windows 11 environment, use appropriate commands.
+
+**Add to Backend `package.json`:**
 
 ```json
 {
   "scripts": {
-    "build:ui": "cd ../Julescontrolroomui && npm run build && xcopy /E /I /Y build ..\\JulesMCP\\backend\\public",
-    "deploy:ui": "npm run build:ui"
+    "build:ui": "cd ..\\Julescontrolroomui && npm run build",
+    "deploy:ui": "npm run build:ui && xcopy /E /I /Y ..\\Julescontrolroomui\\build backend\\public",
+    "clean:ui": "if exist backend\\public\\* del /Q /S backend\\public\\* && echo Cleaned public directory"
   }
 }
+```
+
+**Windows Command Breakdown:**
+- `cd ..\\Julescontrolroomui` - Navigate to UI repo (Windows path)
+- `xcopy /E /I /Y` - Copy directories recursively with overwrite
+  - `/E` - Copy subdirectories including empty ones
+  - `/I` - Assume destination is directory
+  - `/Y` - Suppress overwrite confirmation
+- `del /Q /S` - Delete files quietly and recursively
+
+**Alternative Using PowerShell (More Robust):**
+
+Add `scripts/build-ui.ps1`:
+```powershell
+#!/usr/bin/env pwsh
+$ErrorActionPreference = "Stop"
+
+Write-Host "Building UI..." -ForegroundColor Cyan
+
+# Navigate to UI repo
+Push-Location "..\Julescontrolroomui"
+
+# Install deps if needed
+if (!(Test-Path "node_modules")) {
+    Write-Host "Installing UI dependencies..." -ForegroundColor Yellow
+    npm install
+}
+
+# Build UI
+npm run build
+
+Pop-Location
+
+# Clean public directory
+Write-Host "Cleaning public directory..." -ForegroundColor Cyan
+if (Test-Path "backend\public\*") {
+    Remove-Item -Path "backend\public\*" -Recurse -Force
+}
+
+# Copy build to public
+Write-Host "Copying build to backend/public..." -ForegroundColor Cyan
+Copy-Item -Path "..\Julescontrolroomui\build\*" -Destination "backend\public\" -Recurse -Force
+
+Write-Host "✅ UI deployed successfully!" -ForegroundColor Green
+```
+
+Then in `package.json`:
+```json
+{
+  "scripts": {
+    "deploy:ui": "pwsh -ExecutionPolicy Bypass -File scripts/build-ui.ps1"
+  }
+}
+```
+
+**Validation:**
+```bash
+# Test the build script
+npm run deploy:ui
+
+# Verify files copied
+ls backend/public
+# Should see: index.html, assets/, etc.
 ```
 
 **Step 20: End-to-End Testing**
@@ -1018,6 +1284,43 @@ Spawn sub-agents for:
 - TypeScript errors → Run `npm run typecheck` to identify
 - Missing imports → Check all imports resolve correctly
 - Environment variables → Ensure all `VITE_*` vars are set
+
+---
+
+### Windows-Specific Issues
+
+**Problem:** `xcopy` command not found or fails
+
+**Cause:** Command prompt vs PowerShell differences
+
+**Solution:**
+```powershell
+# Use PowerShell instead of cmd
+# Or use robocopy (more robust)
+robocopy ..\Julescontrolroomui\build backend\public /E /IS /IT
+```
+
+**Problem:** `npm run dev` fails with "Port 3001 already in use"
+
+**Cause:** Previous Node process still running
+
+**Solution:**
+```bash
+# Find process using port 3001
+netstat -ano | findstr :3001
+# Kill process (replace PID with actual process ID)
+taskkill /PID <PID> /F
+```
+
+**Problem:** WebSocket connection fails with "Network error"
+
+**Cause:** Windows Firewall blocking WebSocket
+
+**Solution:**
+```powershell
+# Allow Node.js through firewall (run as Administrator)
+New-NetFirewallRule -DisplayName "Node.js" -Direction Inbound -Program "C:\Program Files\nodejs\node.exe" -Action Allow
+```
 
 ---
 
