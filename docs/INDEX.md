@@ -1,10 +1,10 @@
 ---
 doc_type: index
 subsystem: general
-version: 1.0.0
+version: 2.0.0
 status: approved
 owners: Documentation Team
-last_reviewed: 2025-11-10
+last_reviewed: 2025-11-11
 ---
 
 # Documentation Index
@@ -21,64 +21,65 @@ Complete documentation for the Jules Control Room Backend - a **personal, single
 
 ### Development
 
-- **[Development Guide](./development-guide.md)** - Complete development workflow, architecture, and commands
-- **[Code Quality & Linting](./linting.md)** - Automated linting, ESLint rules, and best practices
-- **[Personal Deployment](./deployment.md)** - Running on your local machine or home server
-- **[Scope Update](./SCOPE_UPDATE.md)** - Boundaries that keep this as a solo tool
+- **[Development Guide](./reference/development-guide.md)** - Complete development workflow, architecture, and commands
+- **[Personal Deployment](./reference/deployment.md)** - Running on your local machine or home server
+- **[Architecture Overview](./architecture.md)** - High-level system architecture
+- **[Architecture Roadmap](./architecture/roadmap.md)** - Project roadmap and milestones
 
-### Quick References
+### Reference Documentation
 
-- **[Linting Quick Reference](./linting-quick-reference.md)** - Quick commands for linting
-- **[Linting Detailed](./linting-detailed.md)** - Comprehensive linting setup and troubleshooting
-
-### Implementation Details
-
-- **[MCP Framework Analysis](./MCP_FRAMEWORK_ANALYSIS.md)** - Strategic framework selection summary
-- **[Implementation Notes](./implementation-notes.md)** - Backend highlights and extensibility
-- **[Claude Instructions](./claude-instructions.md)** - AI assistant guidance for this codebase
+- **[Implementation Notes](./reference/implementation-notes.md)** - Backend highlights and extensibility
+- **[Standards](./standards.md)** - Documentation and coding standards
+- **[Agents Guide](./agents.md)** - AI assistant guidance for this codebase
+- **[TODO](./todo.md)** - Current tasks and project tracking
 
 ### UI Integration Documentation
 
 > **🎨 UI Integration:** Complete documentation for integrating the Jules Control Room UI with the backend.
 
-- **[UI Integration Roadmap](./UI_INTEGRATION_ROADMAP.md)** - Strategic phases and timelines
-- **[Integration Execution Plan](./INTEGRATION_EXECUTION_PLAN.md)** - 23-step detailed execution guide (START HERE for integration)
-- **[Frontend-Backend Reconciliation](./frontend-backend-reconciliation.md)** - Type gaps and Day 1 plan
-- **[UI Documentation Folder](./ui/)** - Comprehensive UI architecture and integration guides
+- **[UI Integration Roadmap](./plans/ui-integration-roadmap.md)** - Strategic phases and timelines
+- **[Integration Execution Plan](./plans/integration-execution.md)** - 23-step detailed execution guide (START HERE for integration)
+- **[Atomic Integration Plan](./plans/atomic-integration.md)** - Incremental integration steps
+- **[Frontend-Backend Reconciliation](./reference/frontend-backend-reconciliation.md)** - Type gaps and Day 1 plan
+- **[Pre-Integration Checklist](./reference/pre-integration-checklist.md)** - Prerequisites verification
 
-### UI Quick Links
+### UI Domain Documentation
 
-For detailed UI documentation, see the **[UI Documentation Folder](./ui/README.md)** which includes:
+For detailed UI documentation, see the **[UI Domain Folder](./domains/ui/README.md)** which includes:
 
-- **[UI Architecture](./ui/ARCHITECTURE.md)** - System architecture, data flow, component hierarchy
-- **[Integration Guide](./ui/INTEGRATION_GUIDE.md)** - Step-by-step API integration instructions
-- **[Backend Brief](./ui/BACKEND_BRIEF.md)** - Executive summary for backend teams
-- **[Implementation Phases](./ui/IMPLEMENTATION_PHASES.md)** - Phased implementation plan
-- **[Jules API Audit](./ui/JULES_API_AUDIT.md)** - Feature compatibility matrix
+- **[UI Overview](./domains/ui/ui-overview.md)** - Complete UI overview and purpose
+- **[UI Architecture](./domains/ui/ui-architecture.md)** - System architecture, data flow, component hierarchy
+- **[Integration Guide](./domains/ui/ui-integration-guide.md)** - Step-by-step API integration instructions
+- **[Backend Brief](./domains/ui/ui-backend-brief.md)** - Executive summary for backend teams
+- **[Implementation Phases](./domains/ui/ui-implementation-phases.md)** - Phased implementation plan
+- **[Jules API Audit](./domains/ui/ui-jules-api-audit.md)** - Feature compatibility matrix
 
-**Legacy UI Overview:**
-- **[UI Overview](./ui-overview.md)** - Original UI overview (see docs/ui/ for complete documentation)
+## Architecture Documentation
 
-## Historical Documentation
+### Architecture Decision Records (ADRs)
 
-### Planning & Analysis
+- **[ADR-0001: MCP Framework](./architecture/adr-0001-mcp-framework.md)** - Strategic framework selection analysis
 
-- **[Codebase Survey](./plan/codebase-survey.md)** - Repository state and improvement opportunities
-- **[Merge Plan](./merge/mergeplanOne.md)** - Merge strategy and planning
-- **[Functionality Loss Analysis](./merge/functionalityLoss.md)** - Analysis of feature changes
+## Planning Documentation
 
-### Research
+- **[Documentation Refactoring Plan](./plans/documentation-refactoring.md)** - Documentation reorganization plan
 
-- **[Executive Brief](./gemini/EXECUTIVE_BRIEF.md)** - Quick framework decision summary (start here!)
-- **[Architecture Diagrams](./gemini/ARCHITECTURE_DIAGRAMS.md)** - Visual comparison of framework architectures
-- **[Strategy Comparison](./gemini/STRATEGY_COMPARISON.md)** - EasyMCP vs FastMCP 2.0 quick reference
-- **[Strategic Update](./gemini/strategicUpdate.md)** - FastMCP 2.0 framework analysis and revised strategy
-- **[MCP Research](./gemini/MCPResearch.md)** - Model Context Protocol research
-- **[Merge Analysis](./gemini/mergeAnalysis.md)** - Technical merge analysis
+## Research Documentation
 
-### Reviews
+### MCP Framework Research
 
-- **[Test Coverage Improvements](./reviews/test-coverage-improvements.md)** - Test suite enhancement recommendations
+- **[Executive Brief](./research/gemini/executive-brief.md)** - Quick framework decision summary (start here!)
+- **[Architecture Diagrams](./research/gemini/architecture-diagrams.md)** - Visual comparison of framework architectures
+- **[Strategy Comparison](./research/gemini/strategy-comparison.md)** - EasyMCP vs FastMCP 2.0 quick reference
+- **[Strategic Update](./research/gemini/strategic-update.md)** - FastMCP 2.0 framework analysis and revised strategy
+- **[MCP Research](./research/gemini/mcp-research.md)** - Model Context Protocol research
+- **[Merge Analysis](./research/gemini/merge-analysis.md)** - Technical merge analysis
+
+### Historical Documentation
+
+- **[Reorganization](./research/historical/reorganization.md)** - Documentation reorganization history
+- **[Merge Plan](./research/historical/merge/merge-plan-one.md)** - Merge strategy and planning
+- **[Functionality Loss Analysis](./research/historical/merge/functionality-loss.md)** - Analysis of feature changes
 
 ---
 
@@ -87,41 +88,67 @@ For detailed UI documentation, see the **[UI Documentation Folder](./ui/README.m
 ```
 docs/
 ├── INDEX.md                            # This file
-├── Core Documentation
-│   ├── development-guide.md            # Primary development docs
-│   ├── deployment.md                   # Personal deployment
-│   ├── linting.md                      # Code quality guide
-│   ├── implementation-notes.md         # Backend implementation
-│   └── MCP_FRAMEWORK_ANALYSIS.md       # Framework selection
+├── architecture.md                     # High-level system architecture
+├── standards.md                        # Documentation and coding standards
+├── agents.md                           # AI assistant guidance
+├── todo.md                             # Current tasks and tracking
+├── revision_log.csv                    # File change log
 │
-├── UI Integration Documentation
-│   ├── UI_INTEGRATION_ROADMAP.md       # Strategic roadmap
-│   ├── INTEGRATION_EXECUTION_PLAN.md   # 23-step execution plan
-│   ├── frontend-backend-reconciliation.md  # Type reconciliation
-│   ├── ui-overview.md                  # Legacy UI overview
-│   └── ui/                             # Complete UI documentation
+├── architecture/                       # Architecture documentation
+│   ├── roadmap.md                      # Project roadmap
+│   └── adr-0001-mcp-framework.md       # MCP framework ADR
+│
+├── domains/                            # Domain-specific documentation
+│   ├── api/                            # REST API domain (future)
+│   ├── websocket/                      # WebSocket domain (future)
+│   ├── auth/                           # Authentication domain (future)
+│   ├── jules-integration/              # Jules API integration (future)
+│   ├── persistence/                    # Data persistence domain (future)
+│   └── ui/                             # UI integration domain
 │       ├── README.md                   # UI docs index
-│       ├── ARCHITECTURE.md             # System architecture
-│       ├── INTEGRATION_GUIDE.md        # Integration instructions
-│       ├── BACKEND_BRIEF.md            # Backend team brief
-│       ├── IMPLEMENTATION_PHASES.md    # Phased implementation
-│       └── JULES_API_AUDIT.md          # API compatibility
+│       ├── ui-overview.md              # UI overview
+│       ├── ui-architecture.md          # UI architecture
+│       ├── ui-integration-guide.md     # Integration guide
+│       ├── ui-backend-brief.md         # Backend team brief
+│       ├── ui-implementation-phases.md # Implementation phases
+│       └── ui-jules-api-audit.md       # API audit
 │
-├── Quick References
-│   ├── linting-quick-reference.md      # Quick lint commands
-│   ├── linting-detailed.md             # Detailed lint setup
-│   └── claude-instructions.md          # AI assistant guide
+├── plans/                              # Planning documentation
+│   ├── ui-integration-roadmap.md       # UI integration roadmap
+│   ├── integration-execution.md        # Integration execution plan
+│   ├── atomic-integration.md           # Atomic integration plan
+│   └── documentation-refactoring.md    # Docs refactoring plan
 │
-└── Historical/Planning
-    ├── plan/
-    │   └── codebase-survey.md          # Codebase analysis
-    ├── merge/
-    │   ├── mergeplanOne.md             # Merge strategy
-    │   └── functionalityLoss.md        # Feature analysis
-    ├── gemini/
-    │   └── [Various research docs]
-    └── reviews/
-        └── test-coverage-improvements.md
+├── reference/                          # Reference documentation
+│   ├── development-guide.md            # Development workflow
+│   ├── deployment.md                   # Deployment guide
+│   ├── implementation-notes.md         # Implementation notes
+│   ├── frontend-backend-reconciliation.md  # Type reconciliation
+│   └── pre-integration-checklist.md    # Pre-integration checks
+│
+├── research/                           # Research documentation
+│   ├── gemini/                         # MCP framework research
+│   │   ├── README.md
+│   │   ├── executive-brief.md
+│   │   ├── architecture-diagrams.md
+│   │   ├── strategy-comparison.md
+│   │   ├── strategic-update.md
+│   │   ├── mcp-research.md
+│   │   └── merge-analysis.md
+│   ├── historical/                     # Historical documentation
+│   │   ├── reorganization.md
+│   │   └── merge/
+│   │       ├── merge-plan-one.md
+│   │       └── functionality-loss.md
+│   ├── pr-reports/                     # PR reports (future)
+│   ├── checkpoints/                    # Validation checkpoints (future)
+│   └── logs/                           # Investigation logs (future)
+│
+├── playbooks/                          # Operational playbooks
+│   └── organizational/
+│       └── documentation_playbook.md   # Master documentation playbook
+│
+└── tasks/                              # Task breakdown materials (future)
 ```
 
 ---
@@ -131,21 +158,21 @@ docs/
 ### Setting Up for the First Time?
 
 1. Start with **[README](../README.md)** - Understand it's a personal tool
-2. Read **[Development Guide](./development-guide.md)** - Architecture and setup
-3. Check **[Code Quality](./linting.md)** - Auto-fix configuration
+2. Read **[Development Guide](./reference/development-guide.md)** - Architecture and setup
+3. Check **[Architecture Overview](./architecture.md)** - System architecture
 4. Run the test suite (`npm run test`) to see end-to-end flows in action
 
 ### Want to Integrate the UI?
 
-1. **[Integration Execution Plan](./INTEGRATION_EXECUTION_PLAN.md)** - Complete 23-step guide (START HERE)
-2. **[UI Integration Roadmap](./UI_INTEGRATION_ROADMAP.md)** - Strategic overview
-3. **[UI Documentation](./ui/README.md)** - Detailed UI architecture and integration guides
-4. **[Frontend-Backend Reconciliation](./frontend-backend-reconciliation.md)** - Known gaps and solutions
+1. **[Integration Execution Plan](./plans/integration-execution.md)** - Complete 23-step guide (START HERE)
+2. **[UI Integration Roadmap](./plans/ui-integration-roadmap.md)** - Strategic overview
+3. **[UI Documentation](./domains/ui/README.md)** - Detailed UI architecture and integration guides
+4. **[Frontend-Backend Reconciliation](./reference/frontend-backend-reconciliation.md)** - Known gaps and solutions
 
 ### Want to Run It Persistently?
 
-1. **[Personal Deployment](./deployment.md)** - Docker or always-on options
-2. **[Development Guide](./development-guide.md#environment-variables)** - Environment configuration
+1. **[Personal Deployment](./reference/deployment.md)** - Docker or always-on options
+2. **[Development Guide](./reference/development-guide.md#environment-variables)** - Environment configuration
 
 ---
 
@@ -160,20 +187,21 @@ docs/
 
 ### Working on this Codebase?
 
-1. **[Claude Instructions](./claude-instructions.md)** - Project context and scope
-2. **[Development Guide](./development-guide.md)** - Architecture (kept simple)
-3. **[Implementation Notes](./implementation-notes.md)** - Design decisions
+1. **[Agents Guide](./agents.md)** - Project context and scope
+2. **[Development Guide](./reference/development-guide.md)** - Architecture (kept simple)
+3. **[Implementation Notes](./reference/implementation-notes.md)** - Design decisions
+4. **[Standards](./standards.md)** - Documentation and coding standards
 
 ### Integrating the UI?
 
-1. **[Integration Execution Plan](./INTEGRATION_EXECUTION_PLAN.md)** - Detailed step-by-step guide
-2. **[UI Documentation Folder](./ui/)** - Complete UI architecture reference
-3. **[Backend Brief](./ui/BACKEND_BRIEF.md)** - What backend teams need to know
+1. **[Integration Execution Plan](./plans/integration-execution.md)** - Detailed step-by-step guide
+2. **[UI Documentation Folder](./domains/ui/)** - Complete UI architecture reference
+3. **[Backend Brief](./domains/ui/ui-backend-brief.md)** - What backend teams need to know
 
 ### Making Code Changes?
 
 - Keep solutions simple and pragmatic
-- Auto-fix runs on save and commit (see [Linting](./linting.md))
+- Follow [Standards](./standards.md) for documentation and code
 - Run `npm run lint:fix` after generating code
 - All tests must pass: `npm run test`
 
@@ -203,10 +231,10 @@ Auto-fix is enabled for linting (see [Linting Guide](./linting.md)).
 ## Need Help?
 
 - Check the relevant guide in this index
-- For **UI integration**: Start with [Integration Execution Plan](./INTEGRATION_EXECUTION_PLAN.md)
-- For **backend development**: See [Development Guide](./development-guide.md)
-- For **troubleshooting**: Review [Codebase Survey](./plan/codebase-survey.md) for known issues
+- For **UI integration**: Start with [Integration Execution Plan](./plans/integration-execution.md)
+- For **backend development**: See [Development Guide](./reference/development-guide.md)
+- For **project tracking**: Check [TODO](./todo.md) for current tasks
 
 ---
 
-**Last Updated:** 2025-11-10
+**Last Updated:** 2025-11-11
